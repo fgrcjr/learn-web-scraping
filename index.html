@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A practice playground for learning web scraping, organized by complexity level." />
+  <meta name="author" content="learn-web-scraping" />
+  <meta name="keywords" content="web scraping, practice, tutorial, css selectors, xpath" />
+  <title>Web Scraping Playground — Learn by Complexity Level</title>
+
+  <!-- Level 5 scenario: structured data hidden in JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Web Scraping Playground",
+    "url": "https://example.com",
+    "author": { "@type": "Person", "name": "Jane Scraper" }
+  }
+  </script>
+
+  <style>
+    :root {
+      --l1: #2e7d32;
+      --l2: #1565c0;
+      --l3: #ef6c00;
+      --l4: #c62828;
+      --l5: #6a1b9a;
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --border: #d9dee5;
+      --text: #1f2933;
+      --muted: #5f6b7a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header.site-header {
+      background: #1f2933;
+      color: #fff;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    header.site-header h1 { margin: 0 0 .5rem; font-size: 2rem; }
+    header.site-header p { margin: 0; color: #cbd2d9; }
+    main { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+    .level-banner {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      color: #fff;
+      margin: 3rem 0 1rem;
+    }
+    .level-banner h2 { margin: 0; font-size: 1.4rem; }
+    .level-banner p { margin: .25rem 0 0; opacity: .9; font-size: .95rem; }
+    .level-1 { background: var(--l1); }
+    .level-2 { background: var(--l2); }
+    .level-3 { background: var(--l3); }
+    .level-4 { background: var(--l4); }
+    .level-5 { background: var(--l5); }
+    section.scenario {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    section.scenario > h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .5rem;
+    }
+    .hint {
+      background: #eef2f7;
+      border-left: 4px solid #9aa5b1;
+      padding: .5rem .75rem;
+      font-size: .85rem;
+      color: var(--muted);
+      margin: .75rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .hint code { background: #dde3ea; padding: .1rem .3rem; border-radius: 3px; }
+    .sandbox {
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: .75rem;
+    }
+    nav.toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      margin-top: 1.5rem;
+    }
+    nav.toc ol { margin: .5rem 0; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid var(--border); padding: .4rem .6rem; text-align: left; }
+    thead th { background: #eef2f7; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .product-card { border: 1px solid var(--border); border-radius: 6px; padding: .75rem; }
+    .product-card .price { font-weight: 700; color: var(--l1); }
+    .product-card .rating { color: #f5a623; }
+    .badge { display: inline-block; font-size: .7rem; padding: .1rem .5rem; border-radius: 10px; background: #eef2f7; }
+    .badge.sale { background: #ffe5e5; color: var(--l4); }
+    .pagination { display: flex; gap: .5rem; list-style: none; padding: 0; }
+    .pagination a { padding: .25rem .6rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; }
+    .pagination .active a { background: var(--l2); color: #fff; }
+    .breadcrumbs { list-style: none; padding: 0; display: flex; gap: .25rem; font-size: .9rem; }
+    .breadcrumbs li + li::before { content: "›"; margin-right: .25rem; color: var(--muted); }
+    .comment { border-left: 3px solid var(--border); padding-left: .75rem; margin: .75rem 0; }
+    .comment .author { font-weight: 600; }
+    .comment .meta { font-size: .8rem; color: var(--muted); }
+    .tabs .tab-buttons { display: flex; gap: .5rem; margin-bottom: .5rem; }
+    .tabs .tab-buttons button { padding: .35rem .9rem; border: 1px solid var(--border); background: #eef2f7; border-radius: 4px; cursor: pointer; }
+    .tabs .tab-buttons button.active { background: var(--l2); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .visually-hidden-display { display: none; }
+    .visually-hidden-visibility { visibility: hidden; }
+    .offscreen { position: absolute; left: -9999px; }
+    .honeypot-field { display: none; }
+    button.action { padding: .4rem 1rem; border: none; border-radius: 4px; background: var(--l5); color: #fff; cursor: pointer; }
+    .spinner { color: var(--muted); font-style: italic; }
+    footer { text-align: center; padding: 2rem; color: var(--muted); font-size: .85rem; }
+    img.placeholder { background: #dde3ea; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>🕷️ Web Scraping Playground</h1>
+  <p>Practice extracting data from every kind of web element — organized from flat &amp; simple to deeply nested &amp; dynamic.</p>
+</header>
+
+<main>
+
+  <!-- ============================================================ -->
+  <!-- TABLE OF CONTENTS                                            -->
+  <!-- ============================================================ -->
+  <nav class="toc" id="table-of-contents" aria-label="Table of contents">
+    <h2>How this page is organized</h2>
+    <p>Each level adds more <strong>layers of nesting</strong> and more moving parts. Start at Level 1 and work your way down.</p>
+    <ol>
+      <li><a href="#level-1">Level 1 — Flat elements</a>: single elements, no nesting (headings, text, links, images, attributes)</li>
+      <li><a href="#level-2">Level 2 — Simple containers</a>: one layer of nesting (lists, simple tables, forms, media)</li>
+      <li><a href="#level-3">Level 3 — Nested structures</a>: 2–3 layers (nested lists, complex tables, card grids, menus, pagination)</li>
+      <li><a href="#level-4">Level 4 — Deep &amp; tricky structures</a>: 4+ layers (comment threads, microdata, hidden elements, iframes, messy markup)</li>
+      <li><a href="#level-5">Level 5 — Dynamic content</a>: JavaScript-rendered, delayed, on-demand, and anti-bot scenarios</li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- LEVEL 1 — FLAT ELEMENTS                                      -->
+  <!-- ============================================================ -->
+  <div class="level-banner level-1" id="level-1">
+    <h2>Level 1 — Flat Elements (no nesting)</h2>
+    <p>Single elements you can grab with one selector. The data is the element's text or an attribute.</p>
+  </div>
+
+  <section class="scenario" id="s1-headings">
+    <h3>1.1 Headings &amp; text elements</h3>
+    <div class="hint">Try: <code>h4</code>, <code>p.intro</code>, <code>#unique-paragraph</code>, <code>span.highlight</code></div>
+    <div class="sandbox">
+      <h4>The Quick Brown Fox</h4>
+      <h5>A Subtitle Underneath</h5>
+      <h6>A Smaller Subtitle</h6>
+      <p class="intro">This is an introductory paragraph with a class.</p>
+      <p id="unique-paragraph">This paragraph has a unique ID — the easiest possible target.</p>
+      <p>This paragraph contains <strong>bold text</strong>, <em>italic text</em>,
+         a <span class="highlight">highlighted span</span>, inline <code>code_text</code>,
+         <mark>marked text</mark>, <small>small print</small>, <del>deleted text</del>,
+         and <ins>inserted text</ins>.</p>
+      <pre>preformatted
+  text block
+    with indentation</pre>
+      <blockquote cite="https://example.com/source">A standalone quotation worth extracting.</blockquote>
+      <hr />
+      <p>Special characters &amp; entities: &copy; 2026, café, naïve, 3&nbsp;&lt;&nbsp;5, emoji 🎯</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s1-links">
+    <h3>1.2 Links (every flavor)</h3>
+    <div class="hint">Extract <code>href</code>, link text, <code>title</code>, <code>rel</code>. Try: <code>a[href^="https"]</code>, <code>a[href$=".pdf"]</code>, <code>a[rel="nofollow"]</code></div>
+    <div class="sandbox">
+      <p><a href="https://example.com/absolute">Absolute URL link</a></p>
+      <p><a href="/relative/path">Relative URL link</a></p>
+      <p><a href="page.html">Relative file link</a></p>
+      <p><a href="#table-of-contents">Anchor (fragment) link</a></p>
+      <p><a href="https://example.com/report.pdf">Link to a PDF file</a></p>
+      <p><a href="mailto:hello@example.com">Email (mailto:) link</a></p>
+      <p><a href="tel:+15551234567">Telephone (tel:) link</a></p>
+      <p><a href="https://example.com/sponsored" rel="nofollow">Nofollow link</a></p>
+      <p><a href="https://example.com/new-tab" target="_blank" rel="noopener">Opens in new tab</a></p>
+      <p><a href="https://example.com/titled" title="Extra info lives in the title attribute">Link with title attribute</a></p>
+      <p><a href="javascript:void(0)" class="js-link">JavaScript pseudo-link (no real URL!)</a></p>
+      <p><a href="https://example.com/page?id=42&category=books&sort=asc">Link with query parameters</a></p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s1-images">
+    <h3>1.3 Images &amp; media references</h3>
+    <div class="hint">Extract <code>src</code>, <code>alt</code>, <code>srcset</code>, <code>data-src</code> (lazy-load pattern). Try: <code>img[alt]</code></div>
+    <div class="sandbox">
+      <img class="placeholder" src="https://placehold.co/120x80" alt="A regular image with alt text" width="120" height="80" />
+      <img class="placeholder" src="https://placehold.co/120x80?text=srcset" alt="Responsive image"
+           srcset="https://placehold.co/120x80 1x, https://placehold.co/240x160 2x" width="120" height="80" />
+      <img class="placeholder lazy" src="https://placehold.co/120x80?text=placeholder"
+           data-src="https://placehold.co/120x80?text=real-image" alt="Lazy-loaded image (real URL in data-src!)" width="120" height="80" />
+      <img class="placeholder" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iODAiLz4=" alt="Inline base64 data URI image" width="120" height="80" />
+    </div>
+  </section>
+
+  <section class="scenario" id="s1-attributes">
+    <h3>1.4 Attributes &amp; data-* attributes</h3>
+    <div class="hint">Data often hides in attributes, not text. Try: <code>[data-product-id]</code>, <code>[data-price]</code>, <code>span[data-status="active"]</code></div>
+    <div class="sandbox">
+      <span data-product-id="SKU-1001" data-price="19.99" data-currency="USD" data-in-stock="true">Wireless Mouse</span><br />
+      <span data-product-id="SKU-1002" data-price="49.50" data-currency="USD" data-in-stock="false">Mechanical Keyboard</span><br />
+      <span data-status="active" data-user-id="u-883" data-joined="2024-03-15">ActiveUser99</span><br />
+      <time datetime="2026-06-11T09:30:00Z">June 11, 2026 at 9:30 AM</time><br />
+      <abbr title="HyperText Markup Language">HTML</abbr> — the full name is in the <code>title</code> attribute.<br />
+      <div data-config='{"theme":"dark","pageSize":25,"features":["export","filter"]}'>Element with JSON stuffed in an attribute</div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s1-meta">
+    <h3>1.5 Meta tags (in the &lt;head&gt;)</h3>
+    <div class="hint">Not visible on the page! Parse the document head: <code>meta[name="description"]</code>, <code>meta[name="keywords"]</code>, the <code>&lt;title&gt;</code> tag.</div>
+    <div class="sandbox">
+      <p>This page's <code>&lt;head&gt;</code> contains <code>description</code>, <code>author</code>, and <code>keywords</code> meta tags,
+         plus a <code>&lt;title&gt;</code>. View the page source to find them — scrapers often need metadata that never renders.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- LEVEL 2 — SIMPLE CONTAINERS                                  -->
+  <!-- ============================================================ -->
+  <div class="level-banner level-2" id="level-2">
+    <h2>Level 2 — Simple Containers (one layer of nesting)</h2>
+    <p>A parent element wrapping a flat set of children. You loop over children of one container.</p>
+  </div>
+
+  <section class="scenario" id="s2-lists">
+    <h3>2.1 Lists (unordered, ordered, definition)</h3>
+    <div class="hint">Try: <code>ul#fruits li</code>, <code>ol.steps li:nth-child(2)</code>, <code>dl dt + dd</code></div>
+    <div class="sandbox">
+      <h4>Unordered list</h4>
+      <ul id="fruits">
+        <li>Apple</li>
+        <li>Banana</li>
+        <li>Cherry</li>
+        <li>Dragonfruit</li>
+      </ul>
+      <h4>Ordered list</h4>
+      <ol class="steps">
+        <li>Send the HTTP request</li>
+        <li>Parse the HTML response</li>
+        <li>Select the elements</li>
+        <li>Extract and store the data</li>
+      </ol>
+      <h4>Definition list (key → value pairs)</h4>
+      <dl>
+        <dt>CPU</dt><dd>8-core 3.2 GHz</dd>
+        <dt>RAM</dt><dd>16 GB DDR5</dd>
+        <dt>Storage</dt><dd>512 GB NVMe SSD</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="scenario" id="s2-table">
+    <h3>2.2 Simple table</h3>
+    <div class="hint">Try: <code>table#simple-table tr</code>, then <code>td</code> per row. Watch out: the first row is headers (<code>th</code>).</div>
+    <div class="sandbox">
+      <table id="simple-table">
+        <tr><th>Country</th><th>Capital</th><th>Population (M)</th></tr>
+        <tr><td>France</td><td>Paris</td><td>68.4</td></tr>
+        <tr><td>Japan</td><td>Tokyo</td><td>124.5</td></tr>
+        <tr><td>Brazil</td><td>Brasília</td><td>216.4</td></tr>
+        <tr><td>Kenya</td><td>Nairobi</td><td>55.1</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="scenario" id="s2-forms">
+    <h3>2.3 Forms &amp; inputs</h3>
+    <div class="hint">Extract <code>name</code>, <code>value</code>, <code>placeholder</code>, selected/checked state. Try: <code>input[name]</code>, <code>select#country option[selected]</code>, <code>input:checked</code></div>
+    <div class="sandbox">
+      <form action="/submit" method="post" id="signup-form">
+        <p><label>Text: <input type="text" name="username" value="prefilled_user" placeholder="Enter username" /></label></p>
+        <p><label>Email: <input type="email" name="email" placeholder="you@example.com" /></label></p>
+        <p><label>Password: <input type="password" name="password" /></label></p>
+        <p><label>Number: <input type="number" name="age" min="18" max="120" value="30" /></label></p>
+        <p><label>Date: <input type="date" name="birthday" value="1996-06-11" /></label></p>
+        <p><label>Range: <input type="range" name="volume" min="0" max="100" value="75" /></label></p>
+        <p><label>Color: <input type="color" name="favorite" value="#6a1b9a" /></label></p>
+        <p><label><input type="checkbox" name="newsletter" checked /> Subscribe to newsletter (checked)</label></p>
+        <p><label><input type="checkbox" name="terms" /> Accept terms (unchecked)</label></p>
+        <p>
+          <label><input type="radio" name="plan" value="free" /> Free</label>
+          <label><input type="radio" name="plan" value="pro" checked /> Pro (selected)</label>
+          <label><input type="radio" name="plan" value="enterprise" /> Enterprise</label>
+        </p>
+        <p><label>Select:
+          <select name="country" id="country">
+            <option value="us">United States</option>
+            <option value="ph" selected>Philippines</option>
+            <option value="de">Germany</option>
+          </select>
+        </label></p>
+        <p><label>Multi-select:
+          <select name="languages" multiple size="3">
+            <option value="py" selected>Python</option>
+            <option value="js" selected>JavaScript</option>
+            <option value="go">Go</option>
+          </select>
+        </label></p>
+        <p><label>Textarea: <textarea name="bio" rows="2" cols="30">Default bio text inside a textarea.</textarea></label></p>
+        <input type="hidden" name="csrf_token" value="abc123-secret-token-xyz" />
+        <p><button type="submit">Submit</button> <input type="reset" value="Reset" /></p>
+      </form>
+      <p class="hint">⚠️ Note the <code>&lt;input type="hidden"&gt;</code> CSRF token — real sites require you to scrape and resubmit these.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s2-media">
+    <h3>2.4 Media elements (audio, video, figure)</h3>
+    <div class="hint">Extract <code>source[src]</code>, <code>track</code>, <code>figcaption</code> text, <code>poster</code> attribute.</div>
+    <div class="sandbox">
+      <figure>
+        <img class="placeholder" src="https://placehold.co/200x120" alt="A figure image" width="200" height="120" />
+        <figcaption>Figure caption: data about the image above.</figcaption>
+      </figure>
+      <video controls width="200" poster="https://placehold.co/200x120?text=poster">
+        <source src="https://example.com/video.mp4" type="video/mp4" />
+        <source src="https://example.com/video.webm" type="video/webm" />
+        <track kind="subtitles" src="https://example.com/subs-en.vtt" srclang="en" label="English" />
+        Your browser does not support video.
+      </video>
+      <audio controls>
+        <source src="https://example.com/audio.mp3" type="audio/mpeg" />
+        <source src="https://example.com/audio.ogg" type="audio/ogg" />
+      </audio>
+      <p>
+        <progress value="70" max="100">70%</progress>
+        <meter value="0.6" min="0" max="1">60%</meter>
+      </p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s2-semantic">
+    <h3>2.5 Semantic containers</h3>
+    <div class="hint">Try: <code>article > p</code>, <code>aside</code>, <code>address</code>. Semantic tags make selection easier.</div>
+    <div class="sandbox">
+      <article>
+        <h4>Article headline</h4>
+        <p>Body of a simple article element.</p>
+      </article>
+      <aside>Aside: tangential content, like a tip box.</aside>
+      <address>
+        Contact: 123 Scraper Street, Data City, 90210<br />
+        <a href="mailto:office@example.com">office@example.com</a>
+      </address>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- LEVEL 3 — NESTED STRUCTURES                                  -->
+  <!-- ============================================================ -->
+  <div class="level-banner level-3" id="level-3">
+    <h2>Level 3 — Nested Structures (2–3 layers)</h2>
+    <p>Containers inside containers. You loop over parents, then drill into each child's sub-elements.</p>
+  </div>
+
+  <section class="scenario" id="s3-nested-lists">
+    <h3>3.1 Nested lists (multi-level)</h3>
+    <div class="hint">Try: <code>ul.tree > li</code> vs <code>ul.tree li</code> — direct child vs any descendant. Recursion helps here.</div>
+    <div class="sandbox">
+      <ul class="tree">
+        <li>Electronics
+          <ul>
+            <li>Computers
+              <ul>
+                <li>Laptops</li>
+                <li>Desktops</li>
+              </ul>
+            </li>
+            <li>Phones
+              <ul>
+                <li>Smartphones</li>
+                <li>Feature phones</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Clothing
+          <ul>
+            <li>Men's</li>
+            <li>Women's</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="s3-complex-table">
+    <h3>3.2 Complex table (thead/tbody/tfoot, colspan, rowspan, nested table)</h3>
+    <div class="hint">Merged cells break naive row/column counting. Try: <code>tbody tr</code>, handle <code>td[colspan]</code> and <code>td[rowspan]</code> explicitly.</div>
+    <div class="sandbox">
+      <table id="complex-table">
+        <caption>Quarterly sales by region</caption>
+        <thead>
+          <tr><th rowspan="2">Region</th><th colspan="2">H1</th><th colspan="2">H2</th></tr>
+          <tr><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>North</td><td>120</td><td>135</td><td>110</td><td>160</td></tr>
+          <tr><td>South</td><td>90</td><td colspan="2">— merged: 195 combined —</td><td>105</td></tr>
+          <tr><td rowspan="2">East (2 sub-rows)</td><td>75</td><td>80</td><td>85</td><td>90</td></tr>
+          <tr><td>70</td><td>72</td><td>78</td><td>81</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td>Total</td><td>355</td><td>287</td><td>273</td><td>436</td></tr>
+        </tfoot>
+      </table>
+      <h4>Nested table (a table inside a table cell)</h4>
+      <table>
+        <tr>
+          <th>Team</th><th>Members</th>
+        </tr>
+        <tr>
+          <td>Data Squad</td>
+          <td>
+            <table>
+              <tr><td>Alice</td><td>Lead</td></tr>
+              <tr><td>Bob</td><td>Engineer</td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="scenario" id="s3-cards">
+    <h3>3.3 Product card grid (repeated structures)</h3>
+    <div class="hint">The classic e-commerce pattern. Loop <code>.product-card</code>, then extract <code>.name</code>, <code>.price</code>, <code>.rating</code>, <code>data-sku</code> from each. Note: not every card has every field!</div>
+    <div class="sandbox">
+      <div class="card-grid" id="products">
+        <div class="product-card" data-sku="P-001" data-category="audio">
+          <img class="placeholder" src="https://placehold.co/180x100" alt="Headphones" width="180" height="100" />
+          <h4 class="name">Noise-Cancelling Headphones</h4>
+          <p class="price" data-value="199.99">$199.99</p>
+          <p class="rating" data-stars="4.5">★★★★½ <span class="review-count">(2,341 reviews)</span></p>
+          <span class="badge sale">SALE</span>
+        </div>
+        <div class="product-card" data-sku="P-002" data-category="audio">
+          <img class="placeholder" src="https://placehold.co/180x100" alt="Speaker" width="180" height="100" />
+          <h4 class="name">Bluetooth Speaker</h4>
+          <p class="price" data-value="59.00">$59.00</p>
+          <p class="rating" data-stars="4.0">★★★★ <span class="review-count">(897 reviews)</span></p>
+        </div>
+        <div class="product-card" data-sku="P-003" data-category="wearables">
+          <img class="placeholder" src="https://placehold.co/180x100" alt="Watch" width="180" height="100" />
+          <h4 class="name">Fitness Watch</h4>
+          <p class="price" data-value="149.95">$149.95</p>
+          <!-- no rating element — handle the missing field! -->
+          <span class="badge">NEW</span>
+        </div>
+        <div class="product-card out-of-stock" data-sku="P-004" data-category="audio">
+          <img class="placeholder" src="https://placehold.co/180x100" alt="Earbuds" width="180" height="100" />
+          <h4 class="name">Wireless Earbuds</h4>
+          <p class="price"><del data-value="89.99">$89.99</del> <ins data-value="69.99">$69.99</ins></p>
+          <p class="rating" data-stars="3.5">★★★½ <span class="review-count">(412 reviews)</span></p>
+          <p class="stock-status">Out of stock</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s3-nav">
+    <h3>3.4 Navigation menu with dropdowns</h3>
+    <div class="hint">Try: <code>nav.main-nav > ul > li > a</code> for top-level items, <code>li.has-dropdown ul a</code> for submenu items.</div>
+    <div class="sandbox">
+      <nav class="main-nav">
+        <ul>
+          <li><a href="/home">Home</a></li>
+          <li class="has-dropdown"><a href="/products">Products</a>
+            <ul class="dropdown">
+              <li><a href="/products/software">Software</a></li>
+              <li><a href="/products/hardware">Hardware</a></li>
+              <li class="has-dropdown"><a href="/products/services">Services</a>
+                <ul class="dropdown">
+                  <li><a href="/products/services/consulting">Consulting</a></li>
+                  <li><a href="/products/services/support">Support</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <section class="scenario" id="s3-breadcrumbs-pagination">
+    <h3>3.5 Breadcrumbs &amp; pagination</h3>
+    <div class="hint">Pagination: find the "next" link (<code>a[rel="next"]</code>) to crawl multi-page sites. The current page often has no link or an <code>.active</code> class.</div>
+    <div class="sandbox">
+      <ol class="breadcrumbs">
+        <li><a href="/">Home</a></li>
+        <li><a href="/electronics">Electronics</a></li>
+        <li><a href="/electronics/audio">Audio</a></li>
+        <li aria-current="page">Headphones</li>
+      </ol>
+      <ul class="pagination">
+        <li><a href="?page=1" rel="prev">‹ Prev</a></li>
+        <li><a href="?page=1">1</a></li>
+        <li class="active"><a href="?page=2" aria-current="page">2</a></li>
+        <li><a href="?page=3">3</a></li>
+        <li><span class="ellipsis">…</span></li>
+        <li><a href="?page=12">12</a></li>
+        <li><a href="?page=3" rel="next">Next ›</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="s3-details">
+    <h3>3.6 Accordion (details/summary) &amp; fieldset forms</h3>
+    <div class="hint">Native <code>&lt;details&gt;</code> content IS in the HTML even when collapsed — no JavaScript needed to scrape it.</div>
+    <div class="sandbox">
+      <details>
+        <summary>What is web scraping? (click to expand)</summary>
+        <p>Hidden answer: extracting structured data from websites programmatically. This text is in the HTML whether or not it's expanded.</p>
+      </details>
+      <details open>
+        <summary>Is this one open by default?</summary>
+        <p>Yes — note the <code>open</code> attribute.</p>
+      </details>
+      <form>
+        <fieldset>
+          <legend>Shipping address</legend>
+          <p><label>Street <input type="text" name="ship_street" /></label></p>
+          <p><label>City <input type="text" name="ship_city" /></label></p>
+        </fieldset>
+        <fieldset>
+          <legend>Billing address</legend>
+          <p><label>Street <input type="text" name="bill_street" /></label></p>
+          <p><label>City <input type="text" name="bill_city" /></label></p>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- LEVEL 4 — DEEP & TRICKY STRUCTURES                           -->
+  <!-- ============================================================ -->
+  <div class="level-banner level-4" id="level-4">
+    <h2>Level 4 — Deep &amp; Tricky Structures (4+ layers)</h2>
+    <p>Recursive nesting, messy real-world markup, hidden data, and structures designed without scrapers in mind.</p>
+  </div>
+
+  <section class="scenario" id="s4-comments">
+    <h3>4.1 Recursive comment thread (arbitrary depth)</h3>
+    <div class="hint">Comments contain replies, which contain replies… Write a recursive parser. Track depth via nesting of <code>.comment .replies .comment</code>.</div>
+    <div class="sandbox" id="comment-thread">
+      <div class="comment" data-comment-id="c1">
+        <p class="author">alice_dev</p>
+        <p class="meta">2 hours ago · 45 upvotes</p>
+        <p class="body">Great article on scraping ethics!</p>
+        <div class="replies">
+          <div class="comment" data-comment-id="c2">
+            <p class="author">bob_builder</p>
+            <p class="meta">1 hour ago · 12 upvotes</p>
+            <p class="body">Agreed — always check robots.txt first.</p>
+            <div class="replies">
+              <div class="comment" data-comment-id="c3">
+                <p class="author">carol_codes</p>
+                <p class="meta">45 minutes ago · 8 upvotes</p>
+                <p class="body">And rate-limit your requests!</p>
+                <div class="replies">
+                  <div class="comment" data-comment-id="c4">
+                    <p class="author">alice_dev</p>
+                    <p class="meta">30 minutes ago · 3 upvotes</p>
+                    <p class="body">This thread is 4 levels deep now.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="comment" data-comment-id="c5">
+            <p class="author">dave_data</p>
+            <p class="meta">50 minutes ago · 5 upvotes</p>
+            <p class="body">A sibling reply at depth 2.</p>
+          </div>
+        </div>
+      </div>
+      <div class="comment" data-comment-id="c6">
+        <p class="author">eve_engineer</p>
+        <p class="meta">3 hours ago · 22 upvotes</p>
+        <p class="body">A second top-level comment.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-microdata">
+    <h3>4.2 Microdata / schema.org markup</h3>
+    <div class="hint">Data is keyed by <code>itemprop</code> attributes, not classes. Try: <code>[itemprop="name"]</code>, <code>[itemprop="price"]</code>. Also check the JSON-LD <code>&lt;script&gt;</code> in this page's head.</div>
+    <div class="sandbox">
+      <div itemscope itemtype="https://schema.org/Product">
+        <h4 itemprop="name">Ergonomic Office Chair</h4>
+        <img class="placeholder" itemprop="image" src="https://placehold.co/150x100" alt="Chair" width="150" height="100" />
+        <p itemprop="description">A chair described with schema.org microdata.</p>
+        <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+          <span itemprop="priceCurrency" content="USD">$</span><span itemprop="price" content="349.00">349.00</span>
+          <link itemprop="availability" href="https://schema.org/InStock" /> In stock
+        </div>
+        <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+          Rated <span itemprop="ratingValue">4.7</span>/5 by <span itemprop="reviewCount">183</span> reviewers
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-messy">
+    <h3>4.3 Messy real-world markup</h3>
+    <div class="hint">No useful classes, inconsistent structure, data mixed with junk. Use positional selectors (<code>:nth-of-type</code>), text matching, or XPath like <code>//b[contains(text(),"Price")]/following-sibling::text()</code>.</div>
+    <div class="sandbox">
+      <div>
+        <div>
+          <div>
+            <b>Price:</b> $24.99<br>
+            <b>Condition:</b> Used - Like New<br>
+            <b>Seller:</b> bookworm_42<br>
+            Random promotional text that isn't data.
+            <br><b>Ships from:</b> Manila, PH
+          </div>
+        </div>
+      </div>
+      <table>
+        <tr><td><font color="navy">Item:</font></td><td><font>Vintage Camera</font></td></tr>
+        <tr><td><font color="navy">Year:</font></td><td>1972</td></tr>
+      </table>
+      <p>Legacy markup with deprecated tags (<code>&lt;font&gt;</code>, <code>&lt;b&gt;</code> as labels) is everywhere on older sites.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-obfuscated">
+    <h3>4.4 Obfuscated / generated class names</h3>
+    <div class="hint">Frameworks generate classes like <code>css-1x8kpq2</code> that change between deployments. Anchor on stable things instead: <code>data-testid</code>, attribute patterns, structure, or text content.</div>
+    <div class="sandbox">
+      <div class="css-9f3kq1 sc-bdVaJa hYNOwm">
+        <span class="css-1x8kpq2" data-testid="listing-title">Downtown Loft Apartment</span>
+        <span class="css-zz92lk" data-testid="listing-price">₱45,000/mo</span>
+        <span class="css-77abcr" data-testid="listing-beds">2 beds</span>
+      </div>
+      <div class="css-9f3kq1 sc-bdVaJa hYNOwm">
+        <span class="css-1x8kpq2" data-testid="listing-title">Suburban House with Garden</span>
+        <span class="css-zz92lk" data-testid="listing-price">₱80,000/mo</span>
+        <span class="css-77abcr" data-testid="listing-beds">4 beds</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-hidden">
+    <h3>4.5 Hidden &amp; invisible elements</h3>
+    <div class="hint">Hidden ≠ absent. All of these are in the HTML and scrapable with an HTTP parser, but a browser-based scraper (Selenium/Playwright) may report them as "not visible".</div>
+    <div class="sandbox">
+      <p class="visually-hidden-display" id="hidden-display-none">Secret #1: hidden with display:none</p>
+      <p class="visually-hidden-visibility" id="hidden-visibility">Secret #2: hidden with visibility:hidden</p>
+      <p hidden id="hidden-attribute">Secret #3: hidden with the HTML hidden attribute</p>
+      <p class="offscreen" id="hidden-offscreen">Secret #4: positioned off-screen</p>
+      <p style="font-size:0" id="hidden-fontsize">Secret #5: font-size zero</p>
+      <p>👆 This sandbox contains <strong>5 hidden secrets</strong>. Can your scraper find them all? (View source!)</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-iframe">
+    <h3>4.6 Iframes (separate documents)</h3>
+    <div class="hint">Iframe content is NOT in the parent page's HTML. You must request the iframe's <code>src</code> separately, or switch frames in Selenium/Playwright.</div>
+    <div class="sandbox">
+      <iframe src="iframe-content.html" title="Embedded content" width="100%" height="120" id="data-frame"></iframe>
+      <iframe srcdoc="&lt;p id='inline-frame-data'&gt;Inline srcdoc iframe: price is &lt;b&gt;$77.77&lt;/b&gt;&lt;/p&gt;" title="Inline iframe" width="100%" height="60"></iframe>
+      <p class="hint">The first iframe loads <code>iframe-content.html</code> (included in this repo). The second embeds its document inline via <code>srcdoc</code>.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-mixed-article">
+    <h3>4.7 Deeply nested article (mixed content extraction)</h3>
+    <div class="hint">Extract the article text but skip the ads, related links, and share buttons interleaved inside it. Try excluding: <code>.ad-slot, .related, .share-bar</code>.</div>
+    <div class="sandbox">
+      <article class="post" itemscope itemtype="https://schema.org/Article">
+        <header>
+          <h4 itemprop="headline">How Spiders Crawl the Web</h4>
+          <div class="byline">
+            By <span itemprop="author">Maria Santos</span> ·
+            <time itemprop="datePublished" datetime="2026-05-20">May 20, 2026</time> ·
+            <span class="read-time">6 min read</span>
+          </div>
+        </header>
+        <div class="post-body" itemprop="articleBody">
+          <p>Paragraph one of the real article content.</p>
+          <div class="ad-slot"><p>🛒 ADVERTISEMENT — Buy ScrapeMaster Pro today!</p></div>
+          <p>Paragraph two continues the article after the ad.</p>
+          <div class="share-bar">
+            <a href="#share-twitter">Share on X</a> <a href="#share-fb">Share on Facebook</a>
+          </div>
+          <p>Paragraph three with a <a href="/glossary/crawler">relevant inline link</a> that belongs to the content.</p>
+          <div class="related">
+            <h5>Related posts</h5>
+            <ul>
+              <li><a href="/posts/xpath-tips">10 XPath Tips</a></li>
+              <li><a href="/posts/css-selectors">CSS Selector Cheatsheet</a></li>
+            </ul>
+          </div>
+          <p>Final paragraph of actual article content.</p>
+        </div>
+        <footer>
+          <ul class="tags">
+            <li><a href="/tag/scraping" rel="tag">scraping</a></li>
+            <li><a href="/tag/crawlers" rel="tag">crawlers</a></li>
+            <li><a href="/tag/python" rel="tag">python</a></li>
+          </ul>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- LEVEL 5 — DYNAMIC CONTENT                                    -->
+  <!-- ============================================================ -->
+  <div class="level-banner level-5" id="level-5">
+    <h2>Level 5 — Dynamic Content (JavaScript required)</h2>
+    <p>None of this data exists in the initial HTML. A plain HTTP request + parser will miss it — you need a headless browser (Playwright, Selenium) or to find the underlying data source.</p>
+  </div>
+
+  <section class="scenario" id="s5-js-render">
+    <h3>5.1 Content injected on page load</h3>
+    <div class="hint">View source: the container is empty. The data appears only after JavaScript runs. With Playwright: <code>page.wait_for_selector("#js-rendered li")</code>.</div>
+    <div class="sandbox">
+      <ul id="js-rendered"><!-- populated by JavaScript --></ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-delayed">
+    <h3>5.2 Delayed content (simulated network latency)</h3>
+    <div class="hint">Appears 3 seconds after load. Naive <code>sleep()</code> works but is fragile — use explicit waits for the element instead.</div>
+    <div class="sandbox">
+      <div id="delayed-content"><span class="spinner">Loading… (content appears after 3 seconds)</span></div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-click">
+    <h3>5.3 Content revealed by clicking</h3>
+    <div class="hint">The data is generated on click — it is NOT pre-hidden in the HTML. Your scraper must perform the click: <code>page.click("#reveal-btn")</code>.</div>
+    <div class="sandbox">
+      <button class="action" id="reveal-btn">Click to reveal the secret code</button>
+      <div id="reveal-target"></div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-load-more">
+    <h3>5.4 "Load more" button (incremental loading)</h3>
+    <div class="hint">Keep clicking until the button disappears, scraping new items each round. 15 items total, 5 per click.</div>
+    <div class="sandbox">
+      <ul id="load-more-list"></ul>
+      <button class="action" id="load-more-btn">Load more</button>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-infinite-scroll">
+    <h3>5.5 Infinite scroll (simulated)</h3>
+    <div class="hint">New items append as you scroll the box. In a headless browser, scroll the container in a loop until the count stops growing.</div>
+    <div class="sandbox">
+      <div id="infinite-box" style="height:150px; overflow-y:auto; border:1px solid var(--border); padding:.5rem;">
+        <div class="scroll-item">Item 1</div>
+        <div class="scroll-item">Item 2</div>
+        <div class="scroll-item">Item 3</div>
+        <div class="scroll-item">Item 4</div>
+        <div class="scroll-item">Item 5</div>
+      </div>
+      <p><span id="scroll-count">5</span> items loaded (max 30)</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-tabs">
+    <h3>5.6 JavaScript tabs (content swapped on click)</h3>
+    <div class="hint">Unlike <code>&lt;details&gt;</code>, all panels here ARE in the HTML but only one is displayed. Hidden panels are still parseable without clicking — compare with 5.3.</div>
+    <div class="sandbox">
+      <div class="tabs" id="tab-widget">
+        <div class="tab-buttons">
+          <button class="active" data-tab="specs">Specs</button>
+          <button data-tab="reviews">Reviews</button>
+          <button data-tab="shipping">Shipping</button>
+        </div>
+        <div class="tab-panel active" data-panel="specs"><p>Specs panel: 8-core CPU, 16 GB RAM.</p></div>
+        <div class="tab-panel" data-panel="reviews"><p>Reviews panel: 4.6/5 average from 318 reviews.</p></div>
+        <div class="tab-panel" data-panel="shipping"><p>Shipping panel: free delivery in 3–5 days.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-json-in-script">
+    <h3>5.7 Data embedded in a &lt;script&gt; tag (the goldmine 🏆)</h3>
+    <div class="hint">Many "dynamic" sites embed the full dataset as JSON in the HTML (<code>window.__INITIAL_STATE__</code>, Next.js <code>__NEXT_DATA__</code>). Regex/parse the script content — no browser needed! Find the <code>#initial-state</code> script in this page's source.</div>
+    <div class="sandbox">
+      <p>This page contains a <code>&lt;script id="initial-state"&gt;</code> tag holding a JSON payload with 3 user records.
+         Extracting it from the raw HTML is often easier and more reliable than scraping the rendered DOM.</p>
+      <div id="state-rendered"></div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-shadow-dom">
+    <h3>5.8 Shadow DOM (web components)</h3>
+    <div class="hint">Shadow DOM content is invisible to normal selectors. In Playwright, CSS pierces open shadow roots automatically; in raw JS use <code>element.shadowRoot.querySelector(...)</code>.</div>
+    <div class="sandbox">
+      <div id="shadow-host"></div>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-honeypot">
+    <h3>5.9 Honeypots &amp; bot traps (defensive awareness)</h3>
+    <div class="hint">Sites plant invisible links/fields to detect bots: humans never see them, naive scrapers follow/fill them. Lesson: filter out hidden elements before interacting.</div>
+    <div class="sandbox">
+      <form id="contact-form">
+        <p><label>Name: <input type="text" name="name" /></label></p>
+        <p><label>Message: <input type="text" name="message" /></label></p>
+        <p class="honeypot-field"><label>Leave this empty: <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
+        <p><button type="button" class="action">Send</button></p>
+      </form>
+      <a href="/bot-trap" class="visually-hidden-display" rel="nofollow">Invisible trap link — a bot that follows every link gets flagged</a>
+      <p>This form contains a hidden <code>website</code> field (a honeypot). A bot that fills every field reveals itself.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-dynamic-ids">
+    <h3>5.10 Randomized IDs (change every page load)</h3>
+    <div class="hint">These IDs are regenerated by JavaScript on every load — selectors saved from DevTools will break. Anchor on the stable <code>data-field</code> attributes instead.</div>
+    <div class="sandbox" id="random-id-zone">
+      <span data-field="order-number">ORD-2026-5512</span><br />
+      <span data-field="order-total">$1,254.00</span><br />
+      <span data-field="order-status">Shipped</span>
+      <p class="hint">Reload the page and inspect — the <code>id</code> attributes on the spans above are different every time.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built for practice. Scrape responsibly: respect robots.txt, rate limits, and terms of service. 🕸️</p>
+    <p id="page-generated-at">Page generated at: <time id="render-time"></time></p>
+  </footer>
+
+</main>
+
+<!-- Level 5.7 scenario: full dataset embedded as JSON in the HTML -->
+<script id="initial-state" type="application/json">
+{
+  "users": [
+    { "id": 101, "name": "Liway Reyes", "role": "admin", "lastLogin": "2026-06-10T14:22:00Z" },
+    { "id": 102, "name": "Tomas Cruz", "role": "editor", "lastLogin": "2026-06-11T08:05:00Z" },
+    { "id": 103, "name": "Ana Dela Peña", "role": "viewer", "lastLogin": "2026-06-09T19:47:00Z" }
+  ],
+  "totalUsers": 3,
+  "apiVersion": "2.4.1"
+}
+</script>
+
+<script>
+  // ---- 5.1 Content injected on page load ----
+  const jsItems = ["Mercury — 57.9M km", "Venus — 108.2M km", "Earth — 149.6M km", "Mars — 227.9M km"];
+  const jsList = document.getElementById("js-rendered");
+  jsItems.forEach(function (item) {
+    const li = document.createElement("li");
+    li.className = "planet";
+    li.textContent = item;
+    jsList.appendChild(li);
+  });
+
+  // ---- 5.2 Delayed content ----
+  setTimeout(function () {
+    document.getElementById("delayed-content").innerHTML =
+      '<p id="late-arrival" data-loaded="true">✅ Delayed data has arrived: the answer is <strong>42</strong>.</p>';
+  }, 3000);
+
+  // ---- 5.3 Reveal on click ----
+  document.getElementById("reveal-btn").addEventListener("click", function () {
+    document.getElementById("reveal-target").innerHTML =
+      '<p id="secret-code">🔑 Secret code: <strong>SCRAPER-' + Math.floor(1000 + Math.random() * 9000) + '</strong></p>';
+  });
+
+  // ---- 5.4 Load more ----
+  let loadedCount = 0;
+  const TOTAL_ITEMS = 15;
+  const loadMoreBtn = document.getElementById("load-more-btn");
+  const loadMoreList = document.getElementById("load-more-list");
+  function loadBatch() {
+    for (let i = 0; i < 5 && loadedCount < TOTAL_ITEMS; i++) {
+      loadedCount++;
+      const li = document.createElement("li");
+      li.className = "lazy-item";
+      li.textContent = "Article #" + loadedCount + " — lorem ipsum headline";
+      loadMoreList.appendChild(li);
+    }
+    if (loadedCount >= TOTAL_ITEMS) loadMoreBtn.remove();
+  }
+  loadMoreBtn.addEventListener("click", loadBatch);
+  loadBatch(); // first batch on load
+
+  // ---- 5.5 Infinite scroll ----
+  const box = document.getElementById("infinite-box");
+  const countEl = document.getElementById("scroll-count");
+  box.addEventListener("scroll", function () {
+    const itemCount = box.querySelectorAll(".scroll-item").length;
+    if (itemCount >= 30) return;
+    if (box.scrollTop + box.clientHeight >= box.scrollHeight - 10) {
+      for (let i = 1; i <= 5; i++) {
+        const div = document.createElement("div");
+        div.className = "scroll-item";
+        div.textContent = "Item " + (itemCount + i);
+        box.appendChild(div);
+      }
+      countEl.textContent = String(itemCount + 5);
+    }
+  });
+
+  // ---- 5.6 Tabs ----
+  document.querySelectorAll("#tab-widget .tab-buttons button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("#tab-widget .tab-buttons button").forEach(function (b) { b.classList.remove("active"); });
+      document.querySelectorAll("#tab-widget .tab-panel").forEach(function (p) { p.classList.remove("active"); });
+      btn.classList.add("active");
+      document.querySelector('#tab-widget .tab-panel[data-panel="' + btn.dataset.tab + '"]').classList.add("active");
+    });
+  });
+
+  // ---- 5.7 Render the embedded JSON state ----
+  const state = JSON.parse(document.getElementById("initial-state").textContent);
+  document.getElementById("state-rendered").innerHTML =
+    "<p>Rendered from embedded JSON: <strong>" + state.totalUsers + " users</strong> — " +
+    state.users.map(function (u) { return u.name + " (" + u.role + ")"; }).join(", ") + "</p>";
+
+  // ---- 5.8 Shadow DOM ----
+  const host = document.getElementById("shadow-host");
+  const shadow = host.attachShadow({ mode: "open" });
+  shadow.innerHTML =
+    '<style>p { font-family: monospace; background: #f3e8fb; padding: .5rem; border-radius: 4px; }</style>' +
+    '<p class="shadow-secret">🌑 This text lives inside a shadow root. Selector from the main document: none will reach it directly.</p>';
+
+  // ---- 5.10 Randomized IDs ----
+  document.querySelectorAll("#random-id-zone span[data-field]").forEach(function (el) {
+    el.id = "el-" + Math.random().toString(36).slice(2, 10);
+  });
+
+  // ---- Footer timestamp ----
+  const now = new Date();
+  const timeEl = document.getElementById("render-time");
+  timeEl.setAttribute("datetime", now.toISOString());
+  timeEl.textContent = now.toISOString();
+</script>
+
+</body>
+</html>
