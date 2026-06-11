@@ -4,6 +4,12 @@ A single-page sandbox for practicing web scraping. Every common scraping scenari
 is laid out as its own section, organized into **five complexity levels** — the more
 layers of nesting and the more moving parts, the higher the level.
 
+Every example has a collapsible **"View HTML source"** block underneath it showing
+the markup *as initially served* (captured before any JavaScript runs) — so you can
+study the structure you're targeting without opening DevTools. For Level 5 sections
+the source block is intentionally empty or minimal: that's the point — the data
+isn't in the initial HTML.
+
 ## Getting started
 
 Open `index.html` directly in a browser, or serve it locally (recommended, so the

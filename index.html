@@ -126,6 +126,26 @@
     .offscreen { position: absolute; left: -9999px; }
     .honeypot-field { display: none; }
     button.action { padding: .4rem 1rem; border: none; border-radius: 4px; background: var(--l5); color: #fff; cursor: pointer; }
+    details.source-view { margin-top: .5rem; }
+    details.source-view > summary {
+      cursor: pointer;
+      font-size: .85rem;
+      color: var(--l2);
+      user-select: none;
+    }
+    details.source-view > pre {
+      background: #1f2933;
+      color: #e4e7eb;
+      padding: .75rem 1rem;
+      border-radius: 6px;
+      font-size: .8rem;
+      line-height: 1.45;
+      overflow-x: auto;
+      max-height: 320px;
+      overflow-y: auto;
+      margin: .5rem 0 0;
+      tab-size: 2;
+    }
     .spinner { color: var(--muted); font-style: italic; }
     footer { text-align: center; padding: 2rem; color: var(--muted); font-size: .85rem; }
     img.placeholder { background: #dde3ea; }
@@ -871,6 +891,41 @@
 </script>
 
 <script>
+  // ---- "View HTML source" blocks ----
+  // Must run before any dynamic content is injected, so each block shows the
+  // initial HTML exactly as a plain HTTP scraper would receive it (Level 5
+  // sandboxes therefore appear empty — that's the lesson).
+  document.querySelectorAll("section.scenario .sandbox").forEach(function (sandbox) {
+    const lines = sandbox.innerHTML.replace(/^\n+/, "").replace(/\s+$/, "").split("\n");
+    const indents = lines.filter(function (l) { return l.trim(); })
+                         .map(function (l) { return l.match(/^[ \t]*/)[0].length; });
+    const minIndent = indents.length ? Math.min.apply(null, indents) : 0;
+    const code = lines.map(function (l) { return l.slice(minIndent); }).join("\n");
+
+    const details = document.createElement("details");
+    details.className = "source-view";
+    const summary = document.createElement("summary");
+    summary.textContent = "</> View HTML source (as initially served, before JavaScript)";
+    const pre = document.createElement("pre");
+    const codeEl = document.createElement("code");
+    codeEl.textContent = code;
+    pre.appendChild(codeEl);
+    details.appendChild(summary);
+    details.appendChild(pre);
+    sandbox.insertAdjacentElement("afterend", details);
+  });
+
+  // The JSON payload for 5.7 lives outside its sandbox — include it in that
+  // section's source view so the example is complete.
+  const stateScript = document.getElementById("initial-state");
+  const stateSourceView = document.querySelector("#s5-json-in-script details.source-view code");
+  if (stateScript && stateSourceView) {
+    stateSourceView.textContent +=
+      '\n\n<!-- elsewhere in the page: -->\n' +
+      '<script id="initial-state" type="application/json">' +
+      stateScript.textContent + '<\/script>';
+  }
+
   // ---- 5.1 Content injected on page load ----
   const jsItems = ["Mercury — 57.9M km", "Venus — 108.2M km", "Earth — 149.6M km", "Mars — 227.9M km"];
   const jsList = document.getElementById("js-rendered");
