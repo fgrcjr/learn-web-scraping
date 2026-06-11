@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Books to Practice — Catalogue Page 2</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 1rem; color: #333; }
+    header { border-bottom: 2px solid #946b2d; margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
+    article.product_pod { border: 1px solid #ddd; border-radius: 6px; padding: .75rem; }
+    .product_pod h3 { font-size: .95rem; margin: .5rem 0 .25rem; }
+    .product_pod h3 a { text-decoration: none; color: #333; }
+    .price_color { color: #946b2d; font-weight: 700; margin: .25rem 0; }
+    .availability { font-size: .8rem; }
+    .instock { color: #2e7d32; }
+    .outofstock { color: #c62828; }
+    .thumb { width: 100%; height: 80px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    .star-rating::before { color: #f5a623; font-size: .9rem; }
+    .star-rating.One::before { content: "★☆☆☆☆"; }
+    .star-rating.Two::before { content: "★★☆☆☆"; }
+    .star-rating.Three::before { content: "★★★☆☆"; }
+    .star-rating.Four::before { content: "★★★★☆"; }
+    .star-rating.Five::before { content: "★★★★★"; }
+    .pager { list-style: none; padding: 0; display: flex; justify-content: space-between; gap: 1rem; }
+    .back-link { font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 Books to Practice</h1>
+    <p class="back-link"><a href="../../index.html">← back to the playground</a></p>
+  </header>
+
+  <div class="grid">
+    <article class="product_pod">
+      <div class="thumb"><span>🌐</span></div>
+      <p class="star-rating Four" aria-label="4 out of 5 stars"></p>
+      <h3><a href="#" title="HTTP and the Art of Asking Nicely">HTTP and the Art of Asking Nicely</a></h3>
+      <p class="price_color">£18.03</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>🧪</span></div>
+      <p class="star-rating Three" aria-label="3 out of 5 stars"></p>
+      <h3><a href="#" title="XPath: Poems for the Structurally Inclined">XPath: Poems for the Structurally ...</a></h3>
+      <p class="price_color">£56.50</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>🍪</span></div>
+      <p class="star-rating Two" aria-label="2 out of 5 stars"></p>
+      <h3><a href="#" title="Session Cookies and Other Baked Goods">Session Cookies and Other Baked G ...</a></h3>
+      <p class="price_color">£12.84</p>
+      <p class="availability outofstock">✘ Out of stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>♾️</span></div>
+      <p class="star-rating Five" aria-label="5 out of 5 stars"></p>
+      <h3><a href="#" title="Infinite Scroll: A Never-Ending Story">Infinite Scroll: A Never-Ending S ...</a></h3>
+      <p class="price_color">£44.18</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+  </div>
+
+  <nav>
+    <ul class="pager">
+      <li class="previous"><a href="index.html">← previous</a></li>
+      <li class="current">Page 2 of 2</li>
+    </ul>
+  </nav>
+</body>
+</html>

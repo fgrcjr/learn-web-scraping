@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Headless and Heartless: A Browser Romance | Books to Practice</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 1rem; color: #333; }
+    .breadcrumb { list-style: none; padding: 0; display: flex; gap: .25rem; font-size: .85rem; }
+    .breadcrumb li + li::before { content: "/"; margin-right: .25rem; color: #999; }
+    .price_color { color: #946b2d; font-weight: 700; font-size: 1.4rem; }
+    .star-rating::before { color: #f5a623; }
+    .star-rating.Five::before { content: "★★★★★"; }
+    table { border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ddd; padding: .4rem .8rem; text-align: left; font-size: .9rem; }
+    th { background: #f4f4f4; }
+    .instock { color: #2e7d32; }
+  </style>
+</head>
+<body>
+  <ul class="breadcrumb">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="index.html">Catalogue</a></li>
+    <li><a href="index.html">Fiction</a></li>
+    <li class="active">Headless and Heartless: A Browser Romance</li>
+  </ul>
+
+  <div class="product_main" itemscope itemtype="https://schema.org/Book">
+    <h1 itemprop="name">Headless and Heartless: A Browser Romance</h1>
+    <p class="star-rating Five" aria-label="5 out of 5 stars"></p>
+    <p class="price_color" itemprop="price">£23.10</p>
+    <p class="availability instock">✔ In stock (3 available)</p>
+    <p itemprop="description">She was a headless browser; he was a rate limiter. Together they
+       learned that every great relationship needs explicit waits.</p>
+  </div>
+
+  <h2>Product Information</h2>
+  <table class="table-striped">
+    <tr><th>UPC</th><td>e30f54cea9b38190</td></tr>
+    <tr><th>Product Type</th><td>Books</td></tr>
+    <tr><th>Price (excl. tax)</th><td>£19.25</td></tr>
+    <tr><th>Price (incl. tax)</th><td>£23.10</td></tr>
+    <tr><th>Tax</th><td>£3.85</td></tr>
+    <tr><th>Availability</th><td>In stock (3 available)</td></tr>
+    <tr><th>Number of reviews</th><td>2</td></tr>
+  </table>
+
+  <p><a href="index.html">← back to catalogue</a></p>
+</body>
+</html>

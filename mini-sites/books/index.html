@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Books to Practice — Catalogue Page 1</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 1rem; color: #333; }
+    header { border-bottom: 2px solid #946b2d; margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
+    article.product_pod { border: 1px solid #ddd; border-radius: 6px; padding: .75rem; }
+    .product_pod h3 { font-size: .95rem; margin: .5rem 0 .25rem; }
+    .product_pod h3 a { text-decoration: none; color: #333; }
+    .price_color { color: #946b2d; font-weight: 700; margin: .25rem 0; }
+    .availability { font-size: .8rem; }
+    .instock { color: #2e7d32; }
+    .outofstock { color: #c62828; }
+    .thumb { width: 100%; height: 80px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    /* Rating is encoded ONLY in the class name — the classic books.toscrape gotcha */
+    .star-rating::before { color: #f5a623; font-size: .9rem; }
+    .star-rating.One::before { content: "★☆☆☆☆"; }
+    .star-rating.Two::before { content: "★★☆☆☆"; }
+    .star-rating.Three::before { content: "★★★☆☆"; }
+    .star-rating.Four::before { content: "★★★★☆"; }
+    .star-rating.Five::before { content: "★★★★★"; }
+    .pager { list-style: none; padding: 0; display: flex; justify-content: flex-end; gap: 1rem; }
+    .back-link { font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 Books to Practice</h1>
+    <p class="back-link"><a href="../../index.html">← back to the playground</a> ·
+       Modeled on the structure of <a href="https://books.toscrape.com" rel="external">books.toscrape.com</a> (a site built for scraping practice)</p>
+    <p class="back-link">⚠️ Gotcha to learn here: the star rating is stored <strong>only in the class name</strong>
+       (e.g. <code>class="star-rating Three"</code>) — there is no rating text to extract.</p>
+  </header>
+
+  <div class="grid">
+    <article class="product_pod">
+      <div class="thumb"><a href="the-art-of-parsing_1.html">🕷️</a></div>
+      <p class="star-rating Three" aria-label="3 out of 5 stars"></p>
+      <h3><a href="the-art-of-parsing_1.html" title="The Art of Parsing">The Art of Parsing</a></h3>
+      <p class="price_color">£51.77</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><a href="headless-and-heartless_2.html">👻</a></div>
+      <p class="star-rating Five" aria-label="5 out of 5 stars"></p>
+      <h3><a href="headless-and-heartless_2.html" title="Headless and Heartless: A Browser Romance">Headless and Heartless: A Browser ...</a></h3>
+      <p class="price_color">£23.10</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>🔍</span></div>
+      <p class="star-rating One" aria-label="1 out of 5 stars"></p>
+      <h3><a href="#" title="Null Pointer: My Life Without Selectors">Null Pointer: My Life Without Sel ...</a></h3>
+      <p class="price_color">£17.46</p>
+      <p class="availability outofstock">✘ Out of stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>🧹</span></div>
+      <p class="star-rating Four" aria-label="4 out of 5 stars"></p>
+      <h3><a href="#" title="Clean Data, Dirty HTML">Clean Data, Dirty HTML</a></h3>
+      <p class="price_color">£35.02</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>⏱️</span></div>
+      <p class="star-rating Two" aria-label="2 out of 5 stars"></p>
+      <h3><a href="#" title="Timeouts: Waiting for Elements That Never Come">Timeouts: Waiting for Elements Th ...</a></h3>
+      <p class="price_color">£42.96</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+
+    <article class="product_pod">
+      <div class="thumb"><span>🪤</span></div>
+      <p class="star-rating Five" aria-label="5 out of 5 stars"></p>
+      <h3><a href="#" title="The Honeypot Diaries">The Honeypot Diaries</a></h3>
+      <p class="price_color">£29.99</p>
+      <p class="availability instock">✔ In stock</p>
+    </article>
+  </div>
+
+  <nav>
+    <ul class="pager">
+      <li class="current">Page 1 of 2</li>
+      <li class="next"><a href="page2.html">next →</a></li>
+    </ul>
+  </nav>
+
+  <footer>
+    <p style="font-size:.8rem; color:#888;">Exercises: (1) scrape title, price, rating (from the class!), and availability for all books across both pages;
+    (2) follow each product link and scrape the UPC from the detail page's table; (3) compute the average price of in-stock books.</p>
+  </footer>
+</body>
+</html>

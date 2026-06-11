@@ -175,6 +175,8 @@
       <li><a href="#level-3">Level 3 — Nested structures</a>: 2–3 layers (nested lists, complex tables, card grids, menus, pagination)</li>
       <li><a href="#level-4">Level 4 — Deep &amp; tricky structures</a>: 4+ layers (comment threads, microdata, hidden elements, iframes, messy markup)</li>
       <li><a href="#level-5">Level 5 — Dynamic content</a>: JavaScript-rendered, delayed, on-demand, and anti-bot scenarios</li>
+      <li><a href="#mini-sites">Mini-sites</a>: multi-page crawling practice (quotes, books, countries — replicas of famous practice sandboxes)</li>
+      <li><a href="#real-sites">Real practice sites</a>: live websites that are explicitly safe to scrape</li>
     </ol>
   </nav>
 
@@ -581,6 +583,32 @@
     </div>
   </section>
 
+  <section class="scenario" id="s3-search-form">
+    <h3>3.7 Search &amp; filter form (GET parameters)</h3>
+    <div class="hint">On real sites this form produces URLs like <code>/search?q=laptop&amp;min_price=100&amp;sort=price_asc</code> — you can often skip the form entirely and request those URLs directly with crafted query strings. Modeled on scrapethissite.com's hockey-team search.</div>
+    <div class="sandbox">
+      <form action="/search" method="get" id="search-form">
+        <p><label>Search: <input type="search" name="q" placeholder="e.g. laptop" /></label></p>
+        <p><label>Min price: <input type="number" name="min_price" min="0" /></label>
+           <label>Max price: <input type="number" name="max_price" min="0" /></label></p>
+        <p><label>Sort:
+          <select name="sort">
+            <option value="relevance" selected>Relevance</option>
+            <option value="price_asc">Price: low to high</option>
+            <option value="price_desc">Price: high to low</option>
+          </select>
+        </label>
+        <label>Per page:
+          <select name="per_page">
+            <option>25</option><option>50</option><option>100</option>
+          </select>
+        </label></p>
+        <p><button type="submit">Search</button></p>
+      </form>
+      <p class="hint">💡 Tip: set <code>per_page=100</code> in the URL to crawl 4× fewer pages. Many sites honor larger values than the UI offers.</p>
+    </div>
+  </section>
+
   <!-- ============================================================ -->
   <!-- LEVEL 4 — DEEP & TRICKY STRUCTURES                           -->
   <!-- ============================================================ -->
@@ -755,6 +783,71 @@
     </div>
   </section>
 
+  <section class="scenario" id="s4-dates-formats">
+    <h3>4.8 Relative dates &amp; international formats</h3>
+    <div class="hint">Extraction is easy — <em>normalization</em> is the real work. Parse all of these into ISO dates and plain numbers. Check for a machine-readable <code>datetime</code> or <code>data-*</code> attribute before resorting to text parsing (only some of these have one!).</div>
+    <div class="sandbox">
+      <h4>Dates (same concept, wildly different formats)</h4>
+      <ul class="date-samples">
+        <li>Posted <time datetime="2026-06-08T10:00:00Z">3 days ago</time> (relative, but with a datetime attribute — lucky!)</li>
+        <li>Posted <span class="rel-date">yesterday at 4:30 PM</span> (relative, NO machine-readable attribute)</li>
+        <li>11/06/2026 (ambiguous: June 11 or November 6, depending on locale)</li>
+        <li>June 11th, 2026</li>
+        <li>11. Juni 2026 (German)</li>
+        <li>2026年6月11日 (Japanese)</li>
+        <li>1718089200 (Unix timestamp in a <span data-timestamp="1718089200">data attribute</span>)</li>
+      </ul>
+      <h4>Numbers &amp; prices</h4>
+      <ul class="number-samples">
+        <li>$1,234.56 (US format)</li>
+        <li>1.234,56 € (German format — separators swapped!)</li>
+        <li>₱12,345.00 (different currency symbol)</li>
+        <li>1 234,56 kr (space as thousands separator)</li>
+        <li>~2.5M views (abbreviated)</li>
+        <li>4.5 out of 5 stars (number embedded in a sentence)</li>
+        <li>(1,250) — accounting negative in parentheses</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-obfuscated-contact">
+    <h3>4.9 Obfuscated contact info</h3>
+    <div class="hint">Sites obfuscate emails to stop naive harvesters. Each variant below needs a different decoding strategy. (Only ever do this where you have permission — that's why they're fake addresses.)</div>
+    <div class="sandbox">
+      <ul>
+        <li>Plain (the baseline): <a href="mailto:plain@example.com">plain@example.com</a></li>
+        <li>Spelled out: contact <span class="obf-email">support [at] example [dot] com</span></li>
+        <li>HTML entities: <span class="obf-entities">&#115;&#97;&#108;&#101;&#115;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;</span> (looks normal rendered, encoded in source)</li>
+        <li>Reversed by CSS: <span class="obf-reversed" style="unicode-bidi: bidi-override; direction: rtl;">moc.elpmaxe@ofni</span> (reads correctly on screen, backwards in the HTML)</li>
+        <li>Assembled by JavaScript: <span id="obf-js">enable JavaScript to see this email</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="s4-class-encoded">
+    <h3>4.10 Data encoded in class names &amp; CSS</h3>
+    <div class="hint">The visible stars are drawn by CSS — the actual value exists ONLY in the class attribute. Extract <code>class</code>, then map <code>One…Five</code> to numbers. This is the signature gotcha of books.toscrape.com; practice the full version in the <a href="mini-sites/books/index.html">books mini-site</a>.</div>
+    <div class="sandbox">
+      <style>
+        .demo-rating::before { color: #f5a623; }
+        .demo-rating.One::before { content: "★☆☆☆☆"; }
+        .demo-rating.Three::before { content: "★★★☆☆"; }
+        .demo-rating.Five::before { content: "★★★★★"; }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: .35rem; }
+        .status-dot.status-online { background: #2e7d32; }
+        .status-dot.status-away { background: #ef6c00; }
+        .status-dot.status-offline { background: #c62828; }
+      </style>
+      <p>Parser's Almanac <span class="demo-rating Five" aria-label="5 stars"></span></p>
+      <p>Selector Digest <span class="demo-rating Three" aria-label="3 stars"></span></p>
+      <p>Crawl Weekly <span class="demo-rating One" aria-label="1 star"></span></p>
+      <hr />
+      <p><span class="status-dot status-online"></span>alice — status is only in the class name</p>
+      <p><span class="status-dot status-away"></span>bob</p>
+      <p><span class="status-dot status-offline"></span>carol</p>
+    </div>
+  </section>
+
   <!-- ============================================================ -->
   <!-- LEVEL 5 — DYNAMIC CONTENT                                    -->
   <!-- ============================================================ -->
@@ -870,6 +963,106 @@
       <span data-field="order-total">$1,254.00</span><br />
       <span data-field="order-status">Shipped</span>
       <p class="hint">Reload the page and inspect — the <code>id</code> attributes on the spans above are different every time.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-cookie-banner">
+    <h3>5.11 Cookie consent banner (overlay blocking interaction)</h3>
+    <div class="hint">The banner doesn't hide the HTML — parsers don't care — but it intercepts clicks, so browser automation must dismiss it first: <code>page.click("#cookie-accept")</code>. Real-world versions live in iframes or shadow DOM for extra pain.</div>
+    <div class="sandbox">
+      <button class="action" id="show-cookie-banner">Re-show the cookie banner</button>
+      <p id="cookie-status" data-consent="pending">Consent status: pending</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-ajax">
+    <h3>5.12 AJAX data from a separate JSON endpoint</h3>
+    <div class="hint">The pro move: open DevTools → Network, find the request to <code>data/products.json</code>, and call that endpoint directly — no HTML parsing, no browser. Modeled on scrapethissite.com's AJAX page. (Requires serving this page over HTTP; on <code>file://</code> the fetch is blocked.)</div>
+    <div class="sandbox">
+      <button class="action" id="ajax-load-btn">Load products via AJAX</button>
+      <ul id="ajax-results"></ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="s5-sortable">
+    <h3>5.13 Client-side sortable table</h3>
+    <div class="hint">All rows ARE in the initial HTML — sorting only reorders the DOM. Lesson: never rely on row order; re-read the table after interacting, or better, sort the extracted data yourself.</div>
+    <div class="sandbox">
+      <table id="sortable-table">
+        <thead>
+          <tr>
+            <th data-sort="name" style="cursor:pointer;">Name ⇅</th>
+            <th data-sort="score" style="cursor:pointer;">Score ⇅</th>
+            <th data-sort="year" style="cursor:pointer;">Year ⇅</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Walrus</td><td data-value="88">88</td><td data-value="2021">2021</td></tr>
+          <tr><td>Aardvark</td><td data-value="95">95</td><td data-value="2023">2023</td></tr>
+          <tr><td>Meerkat</td><td data-value="72">72</td><td data-value="2019">2019</td></tr>
+          <tr><td>Pangolin</td><td data-value="91">91</td><td data-value="2024">2024</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- MINI-SITES — MULTI-PAGE CRAWLING PRACTICE                    -->
+  <!-- ============================================================ -->
+  <div class="level-banner" style="background:#37474f;" id="mini-sites">
+    <h2>🗺️ Mini-Sites — Multi-Page Crawling Practice</h2>
+    <p>Single pages teach parsing; crawling means following links across pages. These small sites in this repo replicate the structure of famous practice sandboxes.</p>
+  </div>
+
+  <section class="scenario" id="mini-quotes">
+    <h3>Quotes site (2 pages, pagination, microdata, tags)</h3>
+    <div class="hint">Modeled on quotes.toscrape.com: <code>.quote</code> cards with <code>itemprop</code> microdata, <code>.author</code>, <code>a.tag</code> lists, and a <code>li.next a</code> pagination link to follow.</div>
+    <div class="sandbox">
+      <p>👉 <a href="mini-sites/quotes/index.html"><strong>Open the quotes mini-site</strong></a></p>
+      <p>Exercise: follow the "Next" link until it disappears, collect every quote/author/tags, and count quotes per author.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="mini-books">
+    <h3>Book catalogue (2 list pages + detail pages)</h3>
+    <div class="hint">Modeled on books.toscrape.com: <code>article.product_pod</code> cards, ratings encoded in class names, truncated titles (full title in the <code>title</code> attribute!), and detail pages with a product-information table.</div>
+    <div class="sandbox">
+      <p>👉 <a href="mini-sites/books/index.html"><strong>Open the books mini-site</strong></a></p>
+      <p>Exercise: a two-depth crawl — list pages for title/price/rating, then follow each product link for the UPC and exact stock count.</p>
+    </div>
+  </section>
+
+  <section class="scenario" id="mini-countries">
+    <h3>Countries dataset (label/value pairs)</h3>
+    <div class="hint">Modeled on scrapethissite.com/pages/simple: <code>.country</code> blocks with <code>strong</code> labels and classed <code>span</code> values — perfect for a first structured dataset.</div>
+    <div class="sandbox">
+      <p>👉 <a href="mini-sites/countries/index.html"><strong>Open the countries mini-site</strong></a></p>
+      <p>Exercise: extract all countries, compute population density, find the largest by area.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- REAL SITES THAT WELCOME SCRAPING PRACTICE                    -->
+  <!-- ============================================================ -->
+  <div class="level-banner" style="background:#00695c;" id="real-sites">
+    <h2>🌐 Graduate to Real Sites (built for scraping practice)</h2>
+    <p>When this playground feels easy, these public sites exist specifically so you can scrape them legally.</p>
+  </div>
+
+  <section class="scenario" id="real-sites-list">
+    <h3>Safe practice targets on the live web</h3>
+    <div class="sandbox">
+      <ul>
+        <li><a href="https://books.toscrape.com" rel="external">books.toscrape.com</a> — 1,000-book fake store: pagination, categories, ratings-in-class-names, detail pages. The canonical first crawl.</li>
+        <li><a href="https://quotes.toscrape.com" rel="external">quotes.toscrape.com</a> — quotes with tags and microdata, plus variants of the SAME data: <code>/js</code> (JavaScript-rendered), <code>/scroll</code> (infinite scroll), <code>/login</code> (CSRF login), <code>/tableful</code> (messy tables), <code>/random</code>.</li>
+        <li><a href="https://www.scrapethissite.com/pages/" rel="external">scrapethissite.com</a> — guided lessons: countries, paginated &amp; searchable hockey-team database (GET forms), AJAX-loaded Oscar data, iframes, and an advanced login/CSRF challenge.</li>
+        <li><a href="https://webscraper.io/test-sites" rel="external">webscraper.io/test-sites</a> — fake e-commerce store in several variants (static pagination, AJAX "load more", true AJAX pagination, scroll loading).</li>
+        <li><a href="https://the-internet.herokuapp.com" rel="external">the-internet.herokuapp.com</a> — dozens of browser-automation challenges: logins, dynamic loading, iframes, hovers, alerts, file downloads.</li>
+        <li><a href="https://httpbin.org" rel="external">httpbin.org</a> — not HTML but HTTP itself: echoes your headers/cookies/auth so you can see exactly what your scraper sends.</li>
+        <li><a href="https://openlibrary.org/developers/api" rel="external">Open Library API</a> — real-world book data with an official free API; practice the "skip scraping, use the API" instinct.</li>
+        <li><a href="https://en.wikipedia.org" rel="external">Wikipedia</a> — tolerant of polite scraping (and offers full database dumps + an API); great for tables and infoboxes. Respect rate limits.</li>
+      </ul>
+      <p class="hint">Everything else on the web: check <code>robots.txt</code> and the site's terms of service first, identify your bot honestly, and rate-limit yourself.</p>
     </div>
   </section>
 
@@ -1012,6 +1205,77 @@
   // ---- 5.10 Randomized IDs ----
   document.querySelectorAll("#random-id-zone span[data-field]").forEach(function (el) {
     el.id = "el-" + Math.random().toString(36).slice(2, 10);
+  });
+
+  // ---- 4.9 JS-assembled email ----
+  (function () {
+    const user = "hello";
+    const domain = ["example", "com"].join(".");
+    const el = document.getElementById("obf-js");
+    el.textContent = user + "@" + domain;
+    el.setAttribute("data-assembled", "true");
+  })();
+
+  // ---- 5.11 Cookie consent banner ----
+  function showCookieBanner() {
+    if (document.getElementById("cookie-banner")) return;
+    const banner = document.createElement("div");
+    banner.id = "cookie-banner";
+    banner.style.cssText = "position:fixed;left:0;right:0;bottom:0;background:#1f2933;color:#fff;padding:1rem 1.5rem;display:flex;gap:1rem;align-items:center;justify-content:center;z-index:1000;flex-wrap:wrap;";
+    banner.innerHTML =
+      '<span>🍪 This pretend site uses pretend cookies. Your scraper must dismiss me to click anything underneath.</span>' +
+      '<button id="cookie-accept" style="padding:.4rem 1rem;border:none;border-radius:4px;background:#2e7d32;color:#fff;cursor:pointer;">Accept</button>' +
+      '<button id="cookie-reject" style="padding:.4rem 1rem;border:none;border-radius:4px;background:#c62828;color:#fff;cursor:pointer;">Reject</button>';
+    document.body.appendChild(banner);
+    function dismiss(choice) {
+      banner.remove();
+      const status = document.getElementById("cookie-status");
+      status.textContent = "Consent status: " + choice;
+      status.setAttribute("data-consent", choice);
+    }
+    document.getElementById("cookie-accept").addEventListener("click", function () { dismiss("accepted"); });
+    document.getElementById("cookie-reject").addEventListener("click", function () { dismiss("rejected"); });
+  }
+  showCookieBanner();
+  document.getElementById("show-cookie-banner").addEventListener("click", showCookieBanner);
+
+  // ---- 5.12 AJAX from JSON endpoint ----
+  document.getElementById("ajax-load-btn").addEventListener("click", function () {
+    const list = document.getElementById("ajax-results");
+    list.innerHTML = '<li class="spinner">Fetching data/products.json…</li>';
+    fetch("data/products.json")
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        list.innerHTML = "";
+        data.products.forEach(function (p) {
+          const li = document.createElement("li");
+          li.className = "ajax-product";
+          li.dataset.productId = p.id;
+          li.textContent = p.name + " — $" + p.price.toFixed(2) + (p.inStock ? "" : " (out of stock)");
+          list.appendChild(li);
+        });
+      })
+      .catch(function () {
+        list.innerHTML = '<li class="spinner">Fetch failed — serve this page over HTTP (python3 -m http.server) instead of opening the file directly.</li>';
+      });
+  });
+
+  // ---- 5.13 Sortable table ----
+  document.querySelectorAll("#sortable-table th[data-sort]").forEach(function (th, colIndex) {
+    th.addEventListener("click", function () {
+      const tbody = document.querySelector("#sortable-table tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const asc = th.dataset.dir !== "asc";
+      th.dataset.dir = asc ? "asc" : "desc";
+      rows.sort(function (a, b) {
+        const av = a.cells[colIndex].dataset.value || a.cells[colIndex].textContent;
+        const bv = b.cells[colIndex].dataset.value || b.cells[colIndex].textContent;
+        const an = parseFloat(av), bn = parseFloat(bv);
+        const cmp = !isNaN(an) && !isNaN(bn) ? an - bn : av.localeCompare(bv);
+        return asc ? cmp : -cmp;
+      });
+      rows.forEach(function (r) { tbody.appendChild(r); });
+    });
   });
 
   // ---- Footer timestamp ----

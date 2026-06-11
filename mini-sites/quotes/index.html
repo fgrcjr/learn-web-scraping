@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quotes to Practice — Page 1</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 800px; margin: 0 auto; padding: 1rem; color: #333; }
+    header { border-bottom: 2px solid #4a7c59; margin-bottom: 1rem; }
+    .quote { border: 1px solid #ddd; border-radius: 6px; padding: 1rem; margin: 1rem 0; }
+    .quote .text { font-size: 1.1rem; font-style: italic; }
+    .quote .author { font-weight: bold; color: #4a7c59; }
+    .tags { margin-top: .5rem; font-size: .85rem; }
+    a.tag { background: #4a7c59; color: #fff; padding: .1rem .5rem; border-radius: 10px; text-decoration: none; margin-right: .25rem; font-size: .75rem; }
+    .pager { list-style: none; padding: 0; display: flex; justify-content: flex-end; gap: 1rem; }
+    .pager a { color: #4a7c59; }
+    aside.top-tags { float: right; width: 180px; margin-left: 1rem; font-size: .85rem; }
+    .back-link { font-size: .85rem; font-family: sans-serif; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quotes to Practice</h1>
+    <p class="back-link"><a href="../../index.html">← back to the playground</a> ·
+       Modeled on the structure of <a href="https://quotes.toscrape.com" rel="external">quotes.toscrape.com</a> (a site built for scraping practice)</p>
+  </header>
+
+  <aside class="top-tags">
+    <h3>Top Ten tags</h3>
+    <span class="tag-item"><a class="tag" href="tag-parsing.html">parsing</a></span>
+    <span class="tag-item"><a class="tag" href="tag-selectors.html">selectors</a></span>
+    <span class="tag-item"><a class="tag" href="tag-ethics.html">ethics</a></span>
+    <span class="tag-item"><a class="tag" href="tag-http.html">http</a></span>
+    <span class="tag-item"><a class="tag" href="tag-patience.html">patience</a></span>
+  </aside>
+
+  <div class="quote" itemscope itemtype="https://schema.org/CreativeWork">
+    <span class="text" itemprop="text">“The data you seek is rarely in the element you expect — inspect twice, select once.”</span>
+    <span>by <small class="author" itemprop="author">Selena Selector</small>
+      <a href="author-selena-selector.html">(about)</a>
+    </span>
+    <div class="tags">
+      Tags:
+      <meta class="keywords" itemprop="keywords" content="selectors,parsing,wisdom" />
+      <a class="tag" href="tag-selectors.html">selectors</a>
+      <a class="tag" href="tag-parsing.html">parsing</a>
+      <a class="tag" href="tag-wisdom.html">wisdom</a>
+    </div>
+  </div>
+
+  <div class="quote" itemscope itemtype="https://schema.org/CreativeWork">
+    <span class="text" itemprop="text">“A polite crawler waits between requests; an impolite one waits in the IP ban list.”</span>
+    <span>by <small class="author" itemprop="author">Robo T. Texter</small>
+      <a href="author-robo-t-texter.html">(about)</a>
+    </span>
+    <div class="tags">
+      Tags:
+      <meta class="keywords" itemprop="keywords" content="ethics,rate-limiting,http" />
+      <a class="tag" href="tag-ethics.html">ethics</a>
+      <a class="tag" href="tag-rate-limiting.html">rate-limiting</a>
+      <a class="tag" href="tag-http.html">http</a>
+    </div>
+  </div>
+
+  <div class="quote" itemscope itemtype="https://schema.org/CreativeWork">
+    <span class="text" itemprop="text">“Behind every single-page app is a JSON API quietly doing all the work.”</span>
+    <span>by <small class="author" itemprop="author">Ajax Jasonson</small>
+      <a href="author-ajax-jasonson.html">(about)</a>
+    </span>
+    <div class="tags">
+      Tags:
+      <meta class="keywords" itemprop="keywords" content="ajax,json,api" />
+      <a class="tag" href="tag-ajax.html">ajax</a>
+      <a class="tag" href="tag-json.html">json</a>
+      <a class="tag" href="tag-api.html">api</a>
+    </div>
+  </div>
+
+  <div class="quote" itemscope itemtype="https://schema.org/CreativeWork">
+    <span class="text" itemprop="text">“Regex on HTML is a love story that always ends in tears. Use a parser.”</span>
+    <span>by <small class="author" itemprop="author">Selena Selector</small>
+      <a href="author-selena-selector.html">(about)</a>
+    </span>
+    <div class="tags">
+      Tags:
+      <meta class="keywords" itemprop="keywords" content="parsing,regex,humor" />
+      <a class="tag" href="tag-parsing.html">parsing</a>
+      <a class="tag" href="tag-regex.html">regex</a>
+      <a class="tag" href="tag-humor.html">humor</a>
+    </div>
+  </div>
+
+  <div class="quote" itemscope itemtype="https://schema.org/CreativeWork">
+    <span class="text" itemprop="text">“If the selector broke overnight, the site shipped a redesign — anchor on meaning, not on markup.”</span>
+    <span>by <small class="author" itemprop="author">Cassandra Cache</small>
+      <a href="author-cassandra-cache.html">(about)</a>
+    </span>
+    <div class="tags">
+      Tags:
+      <meta class="keywords" itemprop="keywords" content="selectors,maintenance,patience" />
+      <a class="tag" href="tag-selectors.html">selectors</a>
+      <a class="tag" href="tag-maintenance.html">maintenance</a>
+      <a class="tag" href="tag-patience.html">patience</a>
+    </div>
+  </div>
+
+  <nav>
+    <ul class="pager">
+      <li class="next"><a href="page2.html">Next →</a></li>
+    </ul>
+  </nav>
+
+  <footer>
+    <p style="font-size:.8rem; color:#888;">Exercise: crawl all pages following the "Next" link, collect every quote with its author and tags, and count quotes per author.</p>
+  </footer>
+</body>
+</html>

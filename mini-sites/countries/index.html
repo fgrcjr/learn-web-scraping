@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countries of the World — Practice Dataset</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 1rem; color: #333; }
+    header { border-bottom: 2px solid #1565c0; margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .country { border: 1px solid #ddd; border-radius: 6px; padding: .75rem; }
+    .country-name { margin: 0 0 .5rem; font-size: 1rem; }
+    .country-info { font-size: .85rem; }
+    .back-link { font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌍 Countries of the World</h1>
+    <p class="back-link"><a href="../../index.html">← back to the playground</a> ·
+       Modeled on the structure of <a href="https://www.scrapethissite.com/pages/simple/" rel="external">scrapethissite.com</a>'s
+       country page (a site built for scraping practice)</p>
+    <p class="back-link">Pattern to learn: label/value pairs where the label is a <code>&lt;strong&gt;</code>
+       and the value is a sibling <code>&lt;span&gt;</code> with a semantic class.</p>
+  </header>
+
+  <div class="grid">
+    <div class="country">
+      <h3 class="country-name">🇵🇭 Philippines</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Manila</span><br />
+        <strong>Population:</strong> <span class="country-population">113880328</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">300000.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇯🇵 Japan</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Tokyo</span><br />
+        <strong>Population:</strong> <span class="country-population">124516650</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">377915.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇧🇷 Brazil</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Brasília</span><br />
+        <strong>Population:</strong> <span class="country-population">216422446</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">8515767.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇰🇪 Kenya</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Nairobi</span><br />
+        <strong>Population:</strong> <span class="country-population">55100586</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">580367.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇳🇴 Norway</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Oslo</span><br />
+        <strong>Population:</strong> <span class="country-population">5474360</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">323802.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇨🇦 Canada</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Ottawa</span><br />
+        <strong>Population:</strong> <span class="country-population">38781291</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">9984670.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇮🇳 India</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">New Delhi</span><br />
+        <strong>Population:</strong> <span class="country-population">1428627663</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">3287263.0</span>
+      </div>
+    </div>
+    <div class="country">
+      <h3 class="country-name">🇩🇪 Germany</h3>
+      <div class="country-info">
+        <strong>Capital:</strong> <span class="country-capital">Berlin</span><br />
+        <strong>Population:</strong> <span class="country-population">83294633</span><br />
+        <strong>Area (km²):</strong> <span class="country-area">357022.0</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p style="font-size:.8rem; color:#888;">Exercises: (1) extract all countries into a list of dicts;
+    (2) compute population density (population / area); (3) find the country with the largest area.</p>
+  </footer>
+</body>
+</html>

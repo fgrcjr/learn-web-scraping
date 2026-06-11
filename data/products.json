@@ -1,0 +1,11 @@
+{
+  "page": 1,
+  "perPage": 4,
+  "total": 4,
+  "products": [
+    { "id": 501, "name": "USB-C Hub", "price": 39.99, "currency": "USD", "inStock": true, "tags": ["accessories", "usb"] },
+    { "id": 502, "name": "Laptop Stand", "price": 54.5, "currency": "USD", "inStock": true, "tags": ["accessories", "ergonomics"] },
+    { "id": 503, "name": "Webcam 4K", "price": 129.0, "currency": "USD", "inStock": false, "tags": ["video", "streaming"] },
+    { "id": 504, "name": "Desk Mat XL", "price": 24.95, "currency": "USD", "inStock": true, "tags": ["accessories", "desk"] }
+  ]
+}

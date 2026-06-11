@@ -48,7 +48,33 @@ with sync_playwright() as p:
 | **2** | Simple containers (one layer) | Unordered/ordered/definition lists, simple table, full form (all input types, hidden CSRF token, select/multi-select/textarea), media (video/audio/figure/progress/meter), semantic tags |
 | **3** | Nested structures (2–3 layers) | Multi-level nested lists, complex tables (thead/tbody/tfoot, colspan/rowspan, nested table), product card grid with missing fields, dropdown nav menus, breadcrumbs & pagination (`rel="next"`), accordions & fieldsets |
 | **4** | Deep & tricky (4+ layers) | Recursive comment threads, schema.org microdata + JSON-LD, messy legacy markup, obfuscated class names (`data-testid` anchoring), 5 kinds of hidden elements, iframes (`src` and `srcdoc`), article extraction with interleaved ads/junk |
-| **5** | Dynamic (JavaScript required) | JS-injected content, delayed loading, click-to-reveal, "load more" button, infinite scroll, JS tabs, JSON embedded in `<script>` tags, Shadow DOM, honeypot bot traps, randomized IDs |
+| **5** | Dynamic (JavaScript required) | JS-injected content, delayed loading, click-to-reveal, "load more" button, infinite scroll, JS tabs, JSON embedded in `<script>` tags, Shadow DOM, honeypot bot traps, randomized IDs, cookie-consent overlay, AJAX from a JSON endpoint, client-side sortable table |
+
+Levels 3–4 also cover: search forms with GET parameters, relative dates & international
+number/date formats, obfuscated emails (entities, CSS-reversed, JS-assembled), and data
+encoded only in class names (the books.toscrape star-rating gotcha).
+
+## Mini-sites (multi-page crawling practice)
+
+The `mini-sites/` folder contains small multi-page sites that replicate the structure of
+famous practice sandboxes, so you can practice *crawling* (following links), not just parsing:
+
+- `mini-sites/quotes/` — quote cards with microdata, tags, and "Next" pagination (modeled on [quotes.toscrape.com](https://quotes.toscrape.com))
+- `mini-sites/books/` — 2-page catalogue + product detail pages; ratings encoded in class names, truncated titles, product-info tables (modeled on [books.toscrape.com](https://books.toscrape.com))
+- `mini-sites/countries/` — label/value country data (modeled on [scrapethissite.com](https://www.scrapethissite.com/pages/simple/))
+
+`data/products.json` serves as a fake AJAX endpoint for scenario 5.12.
+
+## Graduate to real sites
+
+These live sites exist specifically for legal scraping practice (also linked at the bottom
+of the playground page): [books.toscrape.com](https://books.toscrape.com),
+[quotes.toscrape.com](https://quotes.toscrape.com) (with `/js`, `/scroll`, `/login` variants),
+[scrapethissite.com](https://www.scrapethissite.com/pages/),
+[webscraper.io/test-sites](https://webscraper.io/test-sites),
+[the-internet.herokuapp.com](https://the-internet.herokuapp.com),
+[httpbin.org](https://httpbin.org), the [Open Library API](https://openlibrary.org/developers/api),
+and (politely) [Wikipedia](https://en.wikipedia.org).
 
 ## Suggested exercises
 
