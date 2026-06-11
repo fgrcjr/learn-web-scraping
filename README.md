@@ -73,10 +73,12 @@ famous practice sandboxes, so you can practice *crawling* (following links), not
 ## Training & evaluating a scraper (ground truth)
 
 If you're building a general-purpose scraper, this repo doubles as a labeled test set.
-There are **27 extraction tasks** with expected output, in two tiers:
+There are **28 extraction tasks** with expected output, in two tiers:
 
-- **14 static tasks** (`ground-truth/manifest.json`) — solvable with an HTTP request and
-  an HTML/XML parser. Sources include the friendly pages above and a hostile corpus.
+- **15 static tasks** (`ground-truth/manifest.json`) — solvable with an HTTP request and
+  an HTML/XML parser. Sources include the friendly pages above, a hostile corpus, and
+  hashed framework identifiers (CSS Modules, styled-components, Vue scoped attributes,
+  utility-class soup) where hash-dependent selectors are a wrong answer.
 - **13 browser tasks** (`ground-truth/browser-manifest.json`) — the Level 5 dynamic
   scenarios, where the data does not exist in the served HTML: JS-injected content,
   delayed loading, click-to-reveal (random value, matched by regex), load-more,
@@ -109,12 +111,12 @@ all 14 answers and scores 14/14:
 
 ```bash
 pip install beautifulsoup4
-python3 solutions/reference_scraper.py            # 14 static answers
+python3 solutions/reference_scraper.py            # 15 static answers
 
 pip install playwright && python3 -m playwright install chromium
 python3 solutions/reference_browser_scraper.py    # 13 browser answers (serves HTTP itself)
 
-python3 evaluate.py solutions/output              # 27/27
+python3 evaluate.py solutions/output              # 28/28
 ```
 
 ## Graduate to real sites

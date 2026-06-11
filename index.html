@@ -860,6 +860,74 @@
     </div>
   </section>
 
+  <section class="scenario" id="s4-hashed">
+    <h3>4.11 Hashed identifiers (framework-generated, change every build)</h3>
+    <div class="hint">Four framework patterns, same data, no <code>data-testid</code> rescue this time. The hash parts (<code>__x91k2</code>, <code>fWHyCt</code>, <code>data-v-7ba5bd90</code>) change on every deploy — a selector that includes them dies at the next release. Each block below needs a different strategy.</div>
+    <div class="sandbox">
+
+      <h4>A. CSS Modules — <em>partially</em> stable: semantic prefix + hash suffix</h4>
+      <p class="hint">Strategy: prefix attribute selectors. <code>[class*="TalkCard_title__"]</code> survives rebuilds; <code>.TalkCard_title__x91k2</code> does not.</p>
+      <div id="hashed-cssmodules">
+        <div class="TalkCard_card__9f3Kq">
+          <h5 class="TalkCard_title__x91k2">Parsing HTML at Scale</h5>
+          <span class="TalkCard_speaker__22Lqo">Dr. Ana Reyes</span> ·
+          <span class="TalkCard_time__M3kdd">09:00</span>
+        </div>
+        <div class="TalkCard_card__9f3Kq">
+          <h5 class="TalkCard_title__x91k2">Selectors That Survive Redeploys</h5>
+          <span class="TalkCard_speaker__22Lqo">Ben Okafor</span> ·
+          <span class="TalkCard_time__M3kdd">10:30</span>
+        </div>
+      </div>
+
+      <h4>B. styled-components / Emotion — fully hashed, nothing semantic</h4>
+      <p class="hint">Strategy: structure + label text. The classes are pure noise; anchor on <code>h5</code> position and the <code>Speaker:</code>/<code>Time:</code> labels.</p>
+      <div id="hashed-styled">
+        <div class="sc-gsTCUz bhdLno">
+          <h5 class="sc-dlfnbm fWHyCt">The Shadow DOM Diaries</h5>
+          <p class="sc-hKgILt kXPmGt"><b>Speaker:</b> Carmen Ito</p>
+          <p class="sc-eCssSg jUWnZP"><b>Time:</b> 11:15</p>
+        </div>
+        <div class="sc-gsTCUz bhdLno">
+          <h5 class="sc-dlfnbm fWHyCt">Rate Limits and You</h5>
+          <p class="sc-hKgILt kXPmGt"><b>Speaker:</b> Diego Santos</p>
+          <p class="sc-eCssSg jUWnZP"><b>Time:</b> 13:00</p>
+        </div>
+      </div>
+
+      <h4>C. Vue scoped styles — clean classes, hashed <code>data-v-*</code> attributes</h4>
+      <p class="hint">Strategy: just ignore the scoped attributes — the class names are real. <code>.talk .title</code> works; never include <code>[data-v-7ba5bd90]</code>.</p>
+      <div id="hashed-vue">
+        <div class="talk" data-v-7ba5bd90>
+          <h5 class="title" data-v-7ba5bd90>Crawling Politely</h5>
+          <span class="speaker" data-v-7ba5bd90>Elena Petrova</span> ·
+          <span class="time" data-v-7ba5bd90>14:45</span>
+        </div>
+        <div class="talk" data-v-7ba5bd90>
+          <h5 class="title" data-v-7ba5bd90>JSON Hiding in Plain Sight</h5>
+          <span class="speaker" data-v-7ba5bd90>Farid Hassan</span> ·
+          <span class="time" data-v-7ba5bd90>16:00</span>
+        </div>
+      </div>
+
+      <h4>D. Utility-class soup (Tailwind-style) — classes describe looks, not meaning</h4>
+      <p class="hint">Strategy: semantic tags + content patterns. <code>article h5</code> for titles; the speaker starts with <code>by&nbsp;</code>; the time matches <code>\d{2}:\d{2}</code>.</p>
+      <div id="hashed-utility">
+        <article class="flex flex-col gap-2 rounded-lg border border-gray-200 p-4 text-sm shadow-sm">
+          <h5 class="text-base font-semibold leading-tight tracking-tight">Headless Browsers in Production</h5>
+          <span class="text-gray-600">by Grace Lin</span>
+          <span class="font-mono text-xs text-gray-400">17:15</span>
+        </article>
+        <article class="flex flex-col gap-2 rounded-lg border border-gray-200 p-4 text-sm shadow-sm">
+          <h5 class="text-base font-semibold leading-tight tracking-tight">Ethics of Automated Collection</h5>
+          <span class="text-gray-600">by Hugo Mendes</span>
+          <span class="font-mono text-xs text-gray-400">18:30</span>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
   <!-- ============================================================ -->
   <!-- LEVEL 5 — DYNAMIC CONTENT                                    -->
   <!-- ============================================================ -->
@@ -1076,16 +1144,16 @@
 
   <section class="scenario" id="ground-truth-harness">
     <h3>Ground truth &amp; automatic scoring</h3>
-    <div class="hint">This is the part that makes the repo a <em>training set</em>, not just a demo: 27 extraction tasks with expected JSON output, an evaluator, and reference scrapers as the answer key.</div>
+    <div class="hint">This is the part that makes the repo a <em>training set</em>, not just a demo: 28 extraction tasks with expected JSON output, an evaluator, and reference scrapers as the answer key.</div>
     <div class="sandbox">
       <p>Two tiers of tasks:</p>
       <ol>
-        <li><strong>14 static tasks</strong> — solvable with an HTTP request + HTML parser. Defined in <a href="ground-truth/manifest.json"><code>ground-truth/manifest.json</code></a>; answer key: <code>solutions/reference_scraper.py</code> (BeautifulSoup).</li>
+        <li><strong>15 static tasks</strong> — solvable with an HTTP request + HTML parser. Defined in <a href="ground-truth/manifest.json"><code>ground-truth/manifest.json</code></a>; answer key: <code>solutions/reference_scraper.py</code> (BeautifulSoup).</li>
         <li><strong>13 browser tasks</strong> — the Level 5 dynamic scenarios above: waiting, clicking, scrolling, shadow DOM, honeypot detection. Defined in <a href="ground-truth/browser-manifest.json"><code>ground-truth/browser-manifest.json</code></a>; answer key: <code>solutions/reference_browser_scraper.py</code> (Playwright).</li>
       </ol>
       <p>Workflow: run your scraper on the sources, write one JSON file per task into a folder, then score it with
          <code>python3 evaluate.py &lt;your-folder&gt;</code> — order-insensitive (unless the task says otherwise), float-tolerant,
-         regex-matching for intentionally random values, and a diff for every failure. The two reference scrapers together pass 27/27.</p>
+         regex-matching for intentionally random values, and a diff for every failure. The two reference scrapers together pass 28/28.</p>
     </div>
   </section>
 

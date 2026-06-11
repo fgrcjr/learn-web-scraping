@@ -177,6 +177,54 @@ def countries():
     return rows
 
 
+def hashed_classes():
+    """Four framework hashing patterns, four strategies — and not one selector
+    that would break when the hashes change on the next deploy."""
+    soup = soup_of("index.html")
+    rows = []
+
+    # A. CSS Modules: the prefix is semantic and stable; match it, not the hash
+    for card in soup.select('#hashed-cssmodules [class*="TalkCard_card__"]'):
+        rows.append({
+            "framework": "css-modules",
+            "title": card.select_one('[class*="TalkCard_title__"]').get_text(strip=True),
+            "speaker": card.select_one('[class*="TalkCard_speaker__"]').get_text(strip=True),
+            "time": card.select_one('[class*="TalkCard_time__"]').get_text(strip=True),
+        })
+
+    # B. styled-components: classes are noise — anchor on structure + label text
+    for card in soup.select("#hashed-styled > div"):
+        labels = {p.b.get_text(strip=True).rstrip(":"): p.b.next_sibling.strip()
+                  for p in card.find_all("p") if p.b}
+        rows.append({
+            "framework": "styled-components",
+            "title": card.h5.get_text(strip=True),
+            "speaker": labels["Speaker"],
+            "time": labels["Time"],
+        })
+
+    # C. Vue scoped: the data-v-* attribute is the hash — simply ignore it
+    for card in soup.select("#hashed-vue .talk"):
+        rows.append({
+            "framework": "vue-scoped",
+            "title": card.select_one(".title").get_text(strip=True),
+            "speaker": card.select_one(".speaker").get_text(strip=True),
+            "time": card.select_one(".time").get_text(strip=True),
+        })
+
+    # D. utility soup: semantic tags + content patterns, no classes at all
+    for card in soup.select("#hashed-utility article"):
+        spans = [s.get_text(strip=True) for s in card.find_all("span")]
+        rows.append({
+            "framework": "utility",
+            "title": card.h5.get_text(strip=True),
+            "speaker": next(s[3:] for s in spans if s.startswith("by ")),
+            "time": next(s for s in spans if re.fullmatch(r"\d{2}:\d{2}", s)),
+        })
+
+    return rows
+
+
 # -------------------------------------------------------------------- corpus
 
 def corpus_malformed():
@@ -286,6 +334,7 @@ TASKS = {
     "product-cards": product_cards,
     "comment-thread": comment_thread,
     "hidden-secrets": hidden_secrets,
+    "hashed-classes": hashed_classes,
     "quotes": quotes,
     "books": books,
     "book-details": book_details,

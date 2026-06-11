@@ -1,0 +1,10 @@
+[
+  { "framework": "css-modules", "title": "Parsing HTML at Scale", "speaker": "Dr. Ana Reyes", "time": "09:00" },
+  { "framework": "css-modules", "title": "Selectors That Survive Redeploys", "speaker": "Ben Okafor", "time": "10:30" },
+  { "framework": "styled-components", "title": "The Shadow DOM Diaries", "speaker": "Carmen Ito", "time": "11:15" },
+  { "framework": "styled-components", "title": "Rate Limits and You", "speaker": "Diego Santos", "time": "13:00" },
+  { "framework": "vue-scoped", "title": "Crawling Politely", "speaker": "Elena Petrova", "time": "14:45" },
+  { "framework": "vue-scoped", "title": "JSON Hiding in Plain Sight", "speaker": "Farid Hassan", "time": "16:00" },
+  { "framework": "utility", "title": "Headless Browsers in Production", "speaker": "Grace Lin", "time": "17:15" },
+  { "framework": "utility", "title": "Ethics of Automated Collection", "speaker": "Hugo Mendes", "time": "18:30" }
+]

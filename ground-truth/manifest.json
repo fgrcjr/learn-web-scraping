@@ -51,6 +51,12 @@
       "schema": "[{name (without flag emoji), capital, population: int, area_km2: float}]",
       "ground_truth": "ground-truth/countries.json"
     },
+    "hashed-classes": {
+      "sources": ["index.html"],
+      "selector_scope": "#s4-hashed",
+      "schema": "[{framework: css-modules|styled-components|vue-scoped|utility, title, speaker, time}] — selectors must NOT depend on any hash (class suffixes, sc-/css- classes, data-v-* attributes): they change every build",
+      "ground_truth": "ground-truth/hashed-classes.json"
+    },
     "corpus-malformed": {
       "sources": ["corpus/malformed.html"],
       "schema": "[{id (data-id), title, price: float, mileage_km: int}] — parser must survive unclosed/mis-nested tags",
