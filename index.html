@@ -895,7 +895,7 @@
     <h3>5.5 Infinite scroll (simulated)</h3>
     <div class="hint">New items append as you scroll the box. In a headless browser, scroll the container in a loop until the count stops growing.</div>
     <div class="sandbox">
-      <div id="infinite-box" style="height:150px; overflow-y:auto; border:1px solid var(--border); padding:.5rem;">
+      <div id="infinite-box" style="height:100px; overflow-y:auto; border:1px solid var(--border); padding:.5rem;">
         <div class="scroll-item">Item 1</div>
         <div class="scroll-item">Item 2</div>
         <div class="scroll-item">Item 3</div>
@@ -1065,14 +1065,16 @@
 
   <section class="scenario" id="ground-truth-harness">
     <h3>Ground truth &amp; automatic scoring</h3>
-    <div class="hint">This is the part that makes the repo a <em>training set</em>, not just a demo: 14 extraction tasks with expected JSON output, an evaluator, and a reference scraper as the answer key.</div>
+    <div class="hint">This is the part that makes the repo a <em>training set</em>, not just a demo: 27 extraction tasks with expected JSON output, an evaluator, and reference scrapers as the answer key.</div>
     <div class="sandbox">
+      <p>Two tiers of tasks:</p>
       <ol>
-        <li><a href="ground-truth/manifest.json"><code>ground-truth/manifest.json</code></a> — lists every task: source page(s), expected schema, and the answer file.</li>
-        <li>Run your scraper on the sources and write one JSON file per task into a folder.</li>
-        <li>Score it: <code>python3 evaluate.py &lt;your-folder&gt;</code> — order-insensitive, float-tolerant, with a diff for every failure.</li>
-        <li>Stuck? <code>solutions/reference_scraper.py</code> is a BeautifulSoup implementation that passes 14/14.</li>
+        <li><strong>14 static tasks</strong> — solvable with an HTTP request + HTML parser. Defined in <a href="ground-truth/manifest.json"><code>ground-truth/manifest.json</code></a>; answer key: <code>solutions/reference_scraper.py</code> (BeautifulSoup).</li>
+        <li><strong>13 browser tasks</strong> — the Level 5 dynamic scenarios above: waiting, clicking, scrolling, shadow DOM, honeypot detection. Defined in <a href="ground-truth/browser-manifest.json"><code>ground-truth/browser-manifest.json</code></a>; answer key: <code>solutions/reference_browser_scraper.py</code> (Playwright).</li>
       </ol>
+      <p>Workflow: run your scraper on the sources, write one JSON file per task into a folder, then score it with
+         <code>python3 evaluate.py &lt;your-folder&gt;</code> — order-insensitive (unless the task says otherwise), float-tolerant,
+         regex-matching for intentionally random values, and a diff for every failure. The two reference scrapers together pass 27/27.</p>
     </div>
   </section>
 

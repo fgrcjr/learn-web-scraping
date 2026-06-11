@@ -1,0 +1,97 @@
+{
+  "description": "Ground truth for the Level 5 DYNAMIC scenarios on index.html. None of this data exists in the served HTML — it is created by JavaScript, so these tasks require a JS-capable scraper (Playwright/Selenium/puppeteer) that can wait, click, and scroll. Serve the repo over HTTP first (python3 -m http.server) — the AJAX task fails on file://. Values wrapped as {\"$regex\": ...} are matched as regular expressions (for data that is intentionally random). Tasks marked \"ordered\": true compare lists order-sensitively.",
+  "tasks": {
+    "js-rendered": {
+      "sources": ["index.html"],
+      "selector_scope": "#js-rendered",
+      "interaction": "wait for the list items to be injected on load",
+      "schema": "[string] — text of each .planet item",
+      "ground_truth": "ground-truth/js-rendered.json"
+    },
+    "delayed-content": {
+      "sources": ["index.html"],
+      "selector_scope": "#delayed-content",
+      "interaction": "wait up to ~4s for #late-arrival to appear (explicit wait, not sleep)",
+      "schema": "{answer: int (from the <strong>), data_loaded: bool (from data-loaded)}",
+      "ground_truth": "ground-truth/delayed-content.json"
+    },
+    "click-reveal": {
+      "sources": ["index.html"],
+      "selector_scope": "#s5-click",
+      "interaction": "click #reveal-btn, then read #secret-code",
+      "schema": "{code: string} — the code is random per click, so it is matched by regex",
+      "ground_truth": "ground-truth/click-reveal.json"
+    },
+    "load-more": {
+      "sources": ["index.html"],
+      "selector_scope": "#s5-load-more",
+      "interaction": "click #load-more-btn until it disappears",
+      "schema": "{count: int, first: string, last: string, button_gone: bool}",
+      "ground_truth": "ground-truth/load-more.json"
+    },
+    "infinite-scroll": {
+      "sources": ["index.html"],
+      "selector_scope": "#infinite-box",
+      "interaction": "scroll the box to its bottom repeatedly until the item count stops growing",
+      "schema": "{count: int, last: string}",
+      "ground_truth": "ground-truth/infinite-scroll.json"
+    },
+    "tabs": {
+      "sources": ["index.html"],
+      "selector_scope": "#tab-widget",
+      "interaction": "click each tab button and read the active panel",
+      "schema": "{specs: string, reviews: string, shipping: string}",
+      "ground_truth": "ground-truth/tabs.json"
+    },
+    "embedded-json": {
+      "sources": ["index.html"],
+      "selector_scope": "script#initial-state",
+      "interaction": "none needed — parse the JSON inside the script tag (works without a browser too; the lesson is to PREFER this route)",
+      "schema": "{total_users: int, users: [{name, role}]}",
+      "ground_truth": "ground-truth/embedded-json.json"
+    },
+    "shadow-dom": {
+      "sources": ["index.html"],
+      "selector_scope": "#shadow-host",
+      "interaction": "pierce the open shadow root (Playwright selectors do this automatically)",
+      "schema": "{text: string}",
+      "ground_truth": "ground-truth/shadow-dom.json"
+    },
+    "honeypot": {
+      "sources": ["index.html"],
+      "selector_scope": "#contact-form",
+      "interaction": "classify every input by computed visibility (e.g. offsetParent === null) WITHOUT filling any of them",
+      "schema": "{visible_fields: [string], honeypot_fields: [string]} — input name attributes",
+      "ground_truth": "ground-truth/honeypot.json"
+    },
+    "stable-fields": {
+      "sources": ["index.html"],
+      "selector_scope": "#random-id-zone",
+      "interaction": "ids are randomized every load — anchor on data-field instead",
+      "schema": "{<data-field value>: <text>} for each span",
+      "ground_truth": "ground-truth/stable-fields.json"
+    },
+    "cookie-banner": {
+      "sources": ["index.html"],
+      "selector_scope": "#cookie-banner / #cookie-status",
+      "interaction": "detect the banner injected on load, click #cookie-accept, confirm it is gone",
+      "schema": "{banner_appeared: bool, consent_after_accept: string, banner_present_after: bool}",
+      "ground_truth": "ground-truth/cookie-banner.json"
+    },
+    "ajax-products": {
+      "sources": ["index.html", "data/products.json"],
+      "selector_scope": "#s5-ajax",
+      "interaction": "click #ajax-load-btn and wait for li.ajax-product (or skip the UI and fetch data/products.json directly)",
+      "schema": "[{id: int, name, price: float, in_stock: bool}]",
+      "ground_truth": "ground-truth/ajax-products.json"
+    },
+    "sortable-table": {
+      "sources": ["index.html"],
+      "selector_scope": "#sortable-table",
+      "interaction": "click the Score header once (ascending), read the Name column; click again (descending), read it again",
+      "schema": "{names_by_score_asc: [string], names_by_score_desc: [string]} — ORDER MATTERS here",
+      "ordered": true,
+      "ground_truth": "ground-truth/sortable-table.json"
+    }
+  }
+}

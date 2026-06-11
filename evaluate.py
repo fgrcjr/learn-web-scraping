@@ -6,32 +6,49 @@ JSON file per task (e.g. out/quotes.json), then run:
 
     python3 evaluate.py <output-dir>
 
-Comparison rules: lists are order-insensitive, floats compare with a small
-tolerance, and missing tasks are reported as skipped (not failed) so you can
-adopt tasks incrementally.
+Both manifests are scored: ground-truth/manifest.json (static tasks) and
+ground-truth/browser-manifest.json (dynamic tasks needing a headless browser).
+
+Comparison rules: lists are order-insensitive (unless the task sets
+"ordered": true), floats compare with a small tolerance, ground-truth values
+of the form {"$regex": ...} match strings by regular expression, and missing
+tasks are reported as skipped (not failed) so you can adopt tasks
+incrementally.
 """
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+MANIFESTS = ["ground-truth/manifest.json", "ground-truth/browser-manifest.json"]
 
 
-def normalize(value):
+def is_regex_token(value):
+    return isinstance(value, dict) and set(value.keys()) == {"$regex"}
+
+
+def normalize(value, ordered=False):
     """Make values comparable: round floats, sort lists order-insensitively."""
     if isinstance(value, float):
         return round(value, 4)
     if isinstance(value, list):
-        items = [normalize(v) for v in value]
+        items = [normalize(v, ordered) for v in value]
+        if ordered:
+            return items
         return sorted(items, key=lambda v: json.dumps(v, sort_keys=True, ensure_ascii=False))
     if isinstance(value, dict):
-        return {k: normalize(v) for k, v in value.items()}
+        return {k: normalize(v, ordered) for k, v in value.items()}
     return value
 
 
 def first_diff(expected, actual, path="$"):
     """Return a human-readable description of the first difference found."""
+    if is_regex_token(expected):
+        if not isinstance(actual, str) or not re.fullmatch(expected["$regex"], actual):
+            return f"{path}: expected match for /{expected['$regex']}/, got {actual!r}"
+        return None
     if type(expected) is not type(actual):
         return f"{path}: expected {type(expected).__name__}, got {type(actual).__name__}"
     if isinstance(expected, dict):
@@ -66,17 +83,22 @@ def main():
         sys.exit(__doc__)
     out_dir = Path(sys.argv[1])
 
-    manifest = json.loads((ROOT / "ground-truth/manifest.json").read_text(encoding="utf-8"))
-    passed, failed, skipped = [], [], []
+    tasks = {}
+    for manifest_path in MANIFESTS:
+        manifest = json.loads((ROOT / manifest_path).read_text(encoding="utf-8"))
+        tasks.update(manifest["tasks"])
 
-    for task, spec in manifest["tasks"].items():
+    passed, failed, skipped = [], [], []
+    for task, spec in tasks.items():
         candidate_file = out_dir / f"{task}.json"
         if not candidate_file.exists():
             skipped.append(task)
             continue
-        expected = normalize(json.loads((ROOT / spec["ground_truth"]).read_text(encoding="utf-8")))
+        ordered = spec.get("ordered", False)
+        expected = normalize(
+            json.loads((ROOT / spec["ground_truth"]).read_text(encoding="utf-8")), ordered)
         try:
-            actual = normalize(json.loads(candidate_file.read_text(encoding="utf-8")))
+            actual = normalize(json.loads(candidate_file.read_text(encoding="utf-8")), ordered)
         except json.JSONDecodeError as e:
             failed.append((task, f"invalid JSON: {e}"))
             continue
@@ -95,7 +117,7 @@ def main():
 
     total = len(passed) + len(failed)
     print(f"\nScore: {len(passed)}/{total} attempted"
-          f" ({len(skipped)} of {len(manifest['tasks'])} tasks not attempted)")
+          f" ({len(skipped)} of {len(tasks)} tasks not attempted)")
     sys.exit(1 if failed else 0)
 
 

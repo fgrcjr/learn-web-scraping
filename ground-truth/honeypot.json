@@ -1,0 +1,9 @@
+{
+  "visible_fields": [
+    "name",
+    "message"
+  ],
+  "honeypot_fields": [
+    "website"
+  ]
+}

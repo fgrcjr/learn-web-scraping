@@ -1,0 +1,17 @@
+{
+  "total_users": 3,
+  "users": [
+    {
+      "name": "Liway Reyes",
+      "role": "admin"
+    },
+    {
+      "name": "Tomas Cruz",
+      "role": "editor"
+    },
+    {
+      "name": "Ana Dela Peña",
+      "role": "viewer"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 501,
+    "name": "USB-C Hub",
+    "price": 39.99,
+    "in_stock": true
+  },
+  {
+    "id": 502,
+    "name": "Laptop Stand",
+    "price": 54.5,
+    "in_stock": true
+  },
+  {
+    "id": 503,
+    "name": "Webcam 4K",
+    "price": 129.0,
+    "in_stock": false
+  },
+  {
+    "id": 504,
+    "name": "Desk Mat XL",
+    "price": 24.95,
+    "in_stock": true
+  }
+]

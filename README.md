@@ -68,8 +68,17 @@ famous practice sandboxes, so you can practice *crawling* (following links), not
 ## Training & evaluating a scraper (ground truth)
 
 If you're building a general-purpose scraper, this repo doubles as a labeled test set.
-There are **14 extraction tasks** with expected output, covering both the friendly pages
-above and a hostile corpus:
+There are **27 extraction tasks** with expected output, in two tiers:
+
+- **14 static tasks** (`ground-truth/manifest.json`) — solvable with an HTTP request and
+  an HTML/XML parser. Sources include the friendly pages above and a hostile corpus.
+- **13 browser tasks** (`ground-truth/browser-manifest.json`) — the Level 5 dynamic
+  scenarios, where the data does not exist in the served HTML: JS-injected content,
+  delayed loading, click-to-reveal (random value, matched by regex), load-more,
+  infinite scroll, tabs, JSON-in-script, shadow DOM, honeypot detection, randomized
+  IDs, cookie-banner dismissal, AJAX, and a sortable table (order-sensitive scoring).
+
+The hostile corpus for the static tier:
 
 - `corpus/malformed.html` — unclosed/mis-nested tags, unquoted attributes
 - `corpus/legacy-layout.html` — 1998-style nested-table layout, `<font>` tags everywhere
@@ -95,14 +104,13 @@ all 14 answers and scores 14/14:
 
 ```bash
 pip install beautifulsoup4
-python3 solutions/reference_scraper.py
-python3 evaluate.py solutions/output
-```
+python3 solutions/reference_scraper.py            # 14 static answers
 
-Note: the ground truth covers the statically-parseable tasks. The Level 5 dynamic
-scenarios (and the hidden-secrets task's browser-visibility twist) are best verified
-with a headless browser; treat `index.html`'s Level 5 sections as integration tests
-for browser-driven scraping.
+pip install playwright && python3 -m playwright install chromium
+python3 solutions/reference_browser_scraper.py    # 13 browser answers (serves HTTP itself)
+
+python3 evaluate.py solutions/output              # 27/27
+```
 
 ## Graduate to real sites
 
