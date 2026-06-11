@@ -176,6 +176,7 @@
       <li><a href="#level-4">Level 4 — Deep &amp; tricky structures</a>: 4+ layers (comment threads, microdata, hidden elements, iframes, messy markup)</li>
       <li><a href="#level-5">Level 5 — Dynamic content</a>: JavaScript-rendered, delayed, on-demand, and anti-bot scenarios</li>
       <li><a href="#mini-sites">Mini-sites</a>: multi-page crawling practice (quotes, books, countries — replicas of famous practice sandboxes)</li>
+      <li><a href="#wild-corpus">Wild HTML corpus + ground truth</a>: hostile pages (malformed, legacy, class-less, international) with labeled answers and a scoring script — for testing a scraper automatically</li>
       <li><a href="#real-sites">Real practice sites</a>: live websites that are explicitly safe to scrape</li>
     </ol>
   </nav>
@@ -1038,6 +1039,40 @@
     <div class="sandbox">
       <p>👉 <a href="mini-sites/countries/index.html"><strong>Open the countries mini-site</strong></a></p>
       <p>Exercise: extract all countries, compute population density, find the largest by area.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- WILD HTML CORPUS + GROUND TRUTH                              -->
+  <!-- ============================================================ -->
+  <div class="level-banner" style="background:#4e342e;" id="wild-corpus">
+    <h2>🧪 Wild HTML Corpus + Ground Truth</h2>
+    <p>A scraper that only handles clean modern markup isn't general. These pages are hostile on purpose — and every extraction task in this repo has a labeled answer, so you can score a scraper automatically.</p>
+  </div>
+
+  <section class="scenario" id="corpus-pages">
+    <h3>Hostile pages</h3>
+    <div class="sandbox">
+      <ul>
+        <li><a href="corpus/malformed.html"><strong>malformed.html</strong></a> — unclosed lists and table cells, mis-nested <code>&lt;b&gt;&lt;i&gt;</code>, unquoted attributes, raw ampersands. Your parser must recover the way browsers do.</li>
+        <li><a href="corpus/legacy-layout.html"><strong>legacy-layout.html</strong></a> — a 1998-style page: the entire layout is nested tables, everything is <code>&lt;font&gt;</code> tags. Find the one data table among the layout tables.</li>
+        <li><a href="corpus/no-semantics.html"><strong>no-semantics.html</strong></a> — zero ids, zero classes, zero semantic tags. Only structure, order, and label text like "Salary:" to anchor on.</li>
+        <li><a href="corpus/intl.html"><strong>intl.html</strong></a> — German, Japanese, French, and Arabic (RTL) listings. Normalize every price to a number + ISO currency and every date to ISO 8601.</li>
+        <li><a href="corpus/feed.xml"><strong>feed.xml</strong></a> — an RSS feed: scrapers must handle XML too.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="scenario" id="ground-truth-harness">
+    <h3>Ground truth &amp; automatic scoring</h3>
+    <div class="hint">This is the part that makes the repo a <em>training set</em>, not just a demo: 14 extraction tasks with expected JSON output, an evaluator, and a reference scraper as the answer key.</div>
+    <div class="sandbox">
+      <ol>
+        <li><a href="ground-truth/manifest.json"><code>ground-truth/manifest.json</code></a> — lists every task: source page(s), expected schema, and the answer file.</li>
+        <li>Run your scraper on the sources and write one JSON file per task into a folder.</li>
+        <li>Score it: <code>python3 evaluate.py &lt;your-folder&gt;</code> — order-insensitive, float-tolerant, with a diff for every failure.</li>
+        <li>Stuck? <code>solutions/reference_scraper.py</code> is a BeautifulSoup implementation that passes 14/14.</li>
+      </ol>
     </div>
   </section>
 

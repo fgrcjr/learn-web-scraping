@@ -65,6 +65,45 @@ famous practice sandboxes, so you can practice *crawling* (following links), not
 
 `data/products.json` serves as a fake AJAX endpoint for scenario 5.12.
 
+## Training & evaluating a scraper (ground truth)
+
+If you're building a general-purpose scraper, this repo doubles as a labeled test set.
+There are **14 extraction tasks** with expected output, covering both the friendly pages
+above and a hostile corpus:
+
+- `corpus/malformed.html` — unclosed/mis-nested tags, unquoted attributes
+- `corpus/legacy-layout.html` — 1998-style nested-table layout, `<font>` tags everywhere
+- `corpus/no-semantics.html` — no ids, no classes, no semantic tags
+- `corpus/intl.html` — German/Japanese/French/Arabic (RTL) content needing normalization
+- `corpus/feed.xml` — RSS (XML, not HTML)
+
+Workflow:
+
+```bash
+# 1. See what each task expects (sources, schema, answer file)
+cat ground-truth/manifest.json
+
+# 2. Run your scraper against the source pages; write one JSON per task:
+#    out/quotes.json, out/books.json, out/corpus-malformed.json, ...
+
+# 3. Score it (order-insensitive lists, float tolerance, diff per failure)
+python3 evaluate.py out
+```
+
+The answer key is `solutions/reference_scraper.py` (BeautifulSoup), which regenerates
+all 14 answers and scores 14/14:
+
+```bash
+pip install beautifulsoup4
+python3 solutions/reference_scraper.py
+python3 evaluate.py solutions/output
+```
+
+Note: the ground truth covers the statically-parseable tasks. The Level 5 dynamic
+scenarios (and the hidden-secrets task's browser-visibility twist) are best verified
+with a headless browser; treat `index.html`'s Level 5 sections as integration tests
+for browser-driven scraping.
+
 ## Graduate to real sites
 
 These live sites exist specifically for legal scraping practice (also linked at the bottom

@@ -1,0 +1,10 @@
+[
+  { "name": "Philippines", "capital": "Manila", "population": 113880328, "area_km2": 300000.0 },
+  { "name": "Japan", "capital": "Tokyo", "population": 124516650, "area_km2": 377915.0 },
+  { "name": "Brazil", "capital": "Brasília", "population": 216422446, "area_km2": 8515767.0 },
+  { "name": "Kenya", "capital": "Nairobi", "population": 55100586, "area_km2": 580367.0 },
+  { "name": "Norway", "capital": "Oslo", "population": 5474360, "area_km2": 323802.0 },
+  { "name": "Canada", "capital": "Ottawa", "population": 38781291, "area_km2": 9984670.0 },
+  { "name": "India", "capital": "New Delhi", "population": 1428627663, "area_km2": 3287263.0 },
+  { "name": "Germany", "capital": "Berlin", "population": 83294633, "area_km2": 357022.0 }
+]

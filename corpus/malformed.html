@@ -1,0 +1,21 @@
+<html>
+<head><title>Used Cars — Malformed Markup Test</title>
+<body>
+<h1>Used Car Listings</h1>
+<p>This page is intentionally broken: unclosed tags, mis-nested elements, unquoted
+attributes, raw ampersands. Browsers & lenient parsers recover from all of it —
+your scraper must too. <a href="../index.html">back to playground</a>
+<!-- unclosed <ul>, unclosed <li>s, unquoted attribute values -->
+<ul id=cars>
+  <li data-id=car-1><b>2018 Toyota Corolla</b> — <span class=price>$13,500</span> — 64,000 km
+  <li data-id=car-2><b>2020 Honda Civic</b> — <span class=price>$18,900</span> — 41,500 km
+  <li data-id=car-3><b><i>2015 Ford Focus</b></i> — <span class=price>$8,250</span> — 98,300 km
+  <li data-id=car-4><b>2022 Mazda 3</b> — <span class=price>$21,000</span> — 12,700 km
+<p>Contact: Honest Joe's Cars & Trucks <br>
+<table>
+  <tr><td>Open<td>Mon–Sat
+  <tr><td>Phone<td>555-0142
+</table>
+<p>Note the table above never closes its cells or rows, the list never closes at all,
+and one listing has crossed bold/italic tags.
+</html>

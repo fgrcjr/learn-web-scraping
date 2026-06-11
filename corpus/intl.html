@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>International Marketplace — Localization Test</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 0 auto; padding: 1rem; }
+    .listing { border: 1px solid #ccc; border-radius: 6px; padding: .75rem; margin: .75rem 0; }
+    .listing[dir="rtl"] { text-align: right; }
+  </style>
+</head>
+<body>
+  <h1>🌐 International Marketplace</h1>
+  <p>Same schema, four locales. The challenge is normalization: parse every price into
+     a plain number + ISO currency code, and every date into ISO 8601.
+     <a href="../index.html">back to playground</a></p>
+
+  <div class="listing" lang="de">
+    <h2 class="title">Gebrauchtes Mountainbike</h2>
+    <p class="price">1.299,00 €</p>
+    <p class="date">Eingestellt am 11. Juni 2026</p>
+    <p class="location">München, Deutschland</p>
+  </div>
+
+  <div class="listing" lang="ja">
+    <h2 class="title">ヴィンテージカメラ</h2>
+    <p class="price">¥12,800</p>
+    <p class="date">2026年6月10日に出品</p>
+    <p class="location">東京都</p>
+  </div>
+
+  <div class="listing" lang="fr">
+    <h2 class="title">Vélo de course vintage</h2>
+    <p class="price">1 234,56 €</p>
+    <p class="date">Publié le 9 juin 2026</p>
+    <p class="location">Lyon, France</p>
+  </div>
+
+  <div class="listing" lang="ar" dir="rtl">
+    <h2 class="title">ساعة يد كلاسيكية</h2>
+    <p class="price">500.00 د.إ</p>
+    <p class="date">نُشر في 8 يونيو 2026</p>
+    <p class="location">دبي، الإمارات</p>
+  </div>
+</body>
+</html>

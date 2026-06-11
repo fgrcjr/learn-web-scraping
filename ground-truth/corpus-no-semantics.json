@@ -1,0 +1,5 @@
+[
+  { "title": "Senior Data Engineer", "company": "Quantify Analytics", "location": "Makati City", "salary_min": 120000, "salary_max": 160000, "posted": "2026-06-09" },
+  { "title": "Frontend Developer", "company": "Bloom Commerce", "location": "Remote", "salary_min": 80000, "salary_max": 110000, "posted": "2026-06-10" },
+  { "title": "QA Automation Specialist", "company": "Cebu Softworks", "location": "Cebu City", "salary_min": 70000, "salary_max": 95000, "posted": "2026-06-11" }
+]

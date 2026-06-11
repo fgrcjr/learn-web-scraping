@@ -1,0 +1,12 @@
+[
+  { "title": "The Art of Parsing", "price_gbp": 51.77, "rating": 3, "in_stock": true },
+  { "title": "Headless and Heartless: A Browser Romance", "price_gbp": 23.1, "rating": 5, "in_stock": true },
+  { "title": "Null Pointer: My Life Without Selectors", "price_gbp": 17.46, "rating": 1, "in_stock": false },
+  { "title": "Clean Data, Dirty HTML", "price_gbp": 35.02, "rating": 4, "in_stock": true },
+  { "title": "Timeouts: Waiting for Elements That Never Come", "price_gbp": 42.96, "rating": 2, "in_stock": true },
+  { "title": "The Honeypot Diaries", "price_gbp": 29.99, "rating": 5, "in_stock": true },
+  { "title": "HTTP and the Art of Asking Nicely", "price_gbp": 18.03, "rating": 4, "in_stock": true },
+  { "title": "XPath: Poems for the Structurally Inclined", "price_gbp": 56.5, "rating": 3, "in_stock": true },
+  { "title": "Session Cookies and Other Baked Goods", "price_gbp": 12.84, "rating": 2, "in_stock": false },
+  { "title": "Infinite Scroll: A Never-Ending Story", "price_gbp": 44.18, "rating": 5, "in_stock": true }
+]

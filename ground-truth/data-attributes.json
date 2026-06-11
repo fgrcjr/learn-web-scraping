@@ -1,0 +1,4 @@
+[
+  { "sku": "SKU-1001", "name": "Wireless Mouse", "price": 19.99, "currency": "USD", "in_stock": true },
+  { "sku": "SKU-1002", "name": "Mechanical Keyboard", "price": 49.5, "currency": "USD", "in_stock": false }
+]

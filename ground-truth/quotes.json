@@ -1,0 +1,10 @@
+[
+  { "text": "“The data you seek is rarely in the element you expect — inspect twice, select once.”", "author": "Selena Selector", "tags": ["selectors", "parsing", "wisdom"] },
+  { "text": "“A polite crawler waits between requests; an impolite one waits in the IP ban list.”", "author": "Robo T. Texter", "tags": ["ethics", "rate-limiting", "http"] },
+  { "text": "“Behind every single-page app is a JSON API quietly doing all the work.”", "author": "Ajax Jasonson", "tags": ["ajax", "json", "api"] },
+  { "text": "“Regex on HTML is a love story that always ends in tears. Use a parser.”", "author": "Selena Selector", "tags": ["parsing", "regex", "humor"] },
+  { "text": "“If the selector broke overnight, the site shipped a redesign — anchor on meaning, not on markup.”", "author": "Cassandra Cache", "tags": ["selectors", "maintenance", "patience"] },
+  { "text": "“robots.txt is not a lock — it is a handshake. Shake hands.”", "author": "Robo T. Texter", "tags": ["ethics", "robots-txt"] },
+  { "text": "“Cache what you crawl; the second request is always the rude one.”", "author": "Cassandra Cache", "tags": ["ethics", "caching", "http"] },
+  { "text": "“An empty result set is not a bug report. Print the HTML you actually received.”", "author": "Ajax Jasonson", "tags": ["debugging", "patience", "wisdom"] }
+]

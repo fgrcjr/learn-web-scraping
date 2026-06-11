@@ -1,0 +1,6 @@
+[
+  { "id": "car-1", "title": "2018 Toyota Corolla", "price": 13500.0, "mileage_km": 64000 },
+  { "id": "car-2", "title": "2020 Honda Civic", "price": 18900.0, "mileage_km": 41500 },
+  { "id": "car-3", "title": "2015 Ford Focus", "price": 8250.0, "mileage_km": 98300 },
+  { "id": "car-4", "title": "2022 Mazda 3", "price": 21000.0, "mileage_km": 12700 }
+]

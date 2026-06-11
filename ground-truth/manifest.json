@@ -1,0 +1,80 @@
+{
+  "description": "Each task maps source page(s) to an expected extraction result. Run your scraper on the sources, write JSON matching the schema, then score it with evaluate.py. Lists are compared order-insensitively; floats with tolerance.",
+  "tasks": {
+    "data-attributes": {
+      "sources": ["index.html"],
+      "selector_scope": "#s1-attributes",
+      "schema": "[{sku, name, price: float, currency, in_stock: bool}]",
+      "ground_truth": "ground-truth/data-attributes.json"
+    },
+    "simple-table": {
+      "sources": ["index.html"],
+      "selector_scope": "#simple-table",
+      "schema": "[{country, capital, population_m: float}]",
+      "ground_truth": "ground-truth/simple-table.json"
+    },
+    "product-cards": {
+      "sources": ["index.html"],
+      "selector_scope": "#products",
+      "schema": "[{sku, name, category, price: float (current price), original_price: float|null, rating: float|null, review_count: int|null, in_stock: bool}]",
+      "ground_truth": "ground-truth/product-cards.json"
+    },
+    "comment-thread": {
+      "sources": ["index.html"],
+      "selector_scope": "#comment-thread",
+      "schema": "[{id, author, depth: int (0 = top-level), upvotes: int, body}]",
+      "ground_truth": "ground-truth/comment-thread.json"
+    },
+    "hidden-secrets": {
+      "sources": ["index.html"],
+      "selector_scope": "#s4-hidden .sandbox",
+      "schema": "[string] — text of all 5 hidden elements",
+      "ground_truth": "ground-truth/hidden-secrets.json"
+    },
+    "quotes": {
+      "sources": ["mini-sites/quotes/index.html", "mini-sites/quotes/page2.html"],
+      "schema": "[{text (exact .text span content incl. curly quotes), author, tags: [string]}] — crawl via the Next link",
+      "ground_truth": "ground-truth/quotes.json"
+    },
+    "books": {
+      "sources": ["mini-sites/books/index.html", "mini-sites/books/page2.html"],
+      "schema": "[{title (FULL title from the link's title attribute), price_gbp: float, rating: int (from class name), in_stock: bool}]",
+      "ground_truth": "ground-truth/books.json"
+    },
+    "book-details": {
+      "sources": ["mini-sites/books/the-art-of-parsing_1.html", "mini-sites/books/headless-and-heartless_2.html"],
+      "schema": "[{title, upc, available: int (count inside parentheses), tax_gbp: float}]",
+      "ground_truth": "ground-truth/book-details.json"
+    },
+    "countries": {
+      "sources": ["mini-sites/countries/index.html"],
+      "schema": "[{name (without flag emoji), capital, population: int, area_km2: float}]",
+      "ground_truth": "ground-truth/countries.json"
+    },
+    "corpus-malformed": {
+      "sources": ["corpus/malformed.html"],
+      "schema": "[{id (data-id), title, price: float, mileage_km: int}] — parser must survive unclosed/mis-nested tags",
+      "ground_truth": "ground-truth/corpus-malformed.json"
+    },
+    "corpus-legacy": {
+      "sources": ["corpus/legacy-layout.html"],
+      "schema": "[{name, department, extension}] — data table is nested inside layout tables",
+      "ground_truth": "ground-truth/corpus-legacy.json"
+    },
+    "corpus-no-semantics": {
+      "sources": ["corpus/no-semantics.html"],
+      "schema": "[{title, company, location, salary_min: int, salary_max: int, posted (ISO date)}] — no classes or ids available",
+      "ground_truth": "ground-truth/corpus-no-semantics.json"
+    },
+    "corpus-intl": {
+      "sources": ["corpus/intl.html"],
+      "schema": "[{title, price_value: float (normalized), currency (ISO 4217), date (ISO 8601), location}]",
+      "ground_truth": "ground-truth/corpus-intl.json"
+    },
+    "feed": {
+      "sources": ["corpus/feed.xml"],
+      "schema": "[{title, link, pub_date (ISO 8601 with offset)}] — XML, not HTML",
+      "ground_truth": "ground-truth/feed.json"
+    }
+  }
+}

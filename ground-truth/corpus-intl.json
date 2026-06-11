@@ -1,0 +1,6 @@
+[
+  { "title": "Gebrauchtes Mountainbike", "price_value": 1299.0, "currency": "EUR", "date": "2026-06-11", "location": "München, Deutschland" },
+  { "title": "ヴィンテージカメラ", "price_value": 12800.0, "currency": "JPY", "date": "2026-06-10", "location": "東京都" },
+  { "title": "Vélo de course vintage", "price_value": 1234.56, "currency": "EUR", "date": "2026-06-09", "location": "Lyon, France" },
+  { "title": "ساعة يد كلاسيكية", "price_value": 500.0, "currency": "AED", "date": "2026-06-08", "location": "دبي، الإمارات" }
+]

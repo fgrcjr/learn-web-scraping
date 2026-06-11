@@ -1,0 +1,7 @@
+[
+  { "name": "Gloria Ramos", "department": "Accounting", "extension": "x101" },
+  { "name": "Dennis Uy", "department": "Warehouse", "extension": "x214" },
+  { "name": "Marites Lim", "department": "Sales & Marketing", "extension": "x305" },
+  { "name": "Boyet Garcia", "department": "IT (the computer guy)", "extension": "x420" },
+  { "name": "Cynthia Tan", "department": "Human Resources", "extension": "x507" }
+]

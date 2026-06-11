@@ -1,0 +1,8 @@
+[
+  { "id": "c1", "author": "alice_dev", "depth": 0, "upvotes": 45, "body": "Great article on scraping ethics!" },
+  { "id": "c2", "author": "bob_builder", "depth": 1, "upvotes": 12, "body": "Agreed — always check robots.txt first." },
+  { "id": "c3", "author": "carol_codes", "depth": 2, "upvotes": 8, "body": "And rate-limit your requests!" },
+  { "id": "c4", "author": "alice_dev", "depth": 3, "upvotes": 3, "body": "This thread is 4 levels deep now." },
+  { "id": "c5", "author": "dave_data", "depth": 1, "upvotes": 5, "body": "A sibling reply at depth 2." },
+  { "id": "c6", "author": "eve_engineer", "depth": 0, "upvotes": 22, "body": "A second top-level comment." }
+]

@@ -1,0 +1,6 @@
+[
+  { "sku": "P-001", "name": "Noise-Cancelling Headphones", "category": "audio", "price": 199.99, "original_price": null, "rating": 4.5, "review_count": 2341, "in_stock": true },
+  { "sku": "P-002", "name": "Bluetooth Speaker", "category": "audio", "price": 59.0, "original_price": null, "rating": 4.0, "review_count": 897, "in_stock": true },
+  { "sku": "P-003", "name": "Fitness Watch", "category": "wearables", "price": 149.95, "original_price": null, "rating": null, "review_count": null, "in_stock": true },
+  { "sku": "P-004", "name": "Wireless Earbuds", "category": "audio", "price": 69.99, "original_price": 89.99, "rating": 3.5, "review_count": 412, "in_stock": false }
+]
