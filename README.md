@@ -106,8 +106,7 @@ cat ground-truth/manifest.json
 python3 evaluate.py out
 ```
 
-The answer key is `solutions/reference_scraper.py` (BeautifulSoup), which regenerates
-all 14 answers and scores 14/14:
+The answer keys regenerate every expected output and score 28/28 together:
 
 ```bash
 pip install beautifulsoup4
