@@ -136,7 +136,8 @@
       color: var(--l2);
       user-select: none;
     }
-    details.source-view > pre {
+    details.source-view > pre,
+    details.live-view > pre {
       background: #1f2933;
       color: #e4e7eb;
       padding: .75rem 1rem;
@@ -149,6 +150,16 @@
       margin: .5rem 0 0;
       tab-size: 2;
     }
+    details.live-view { margin-top: .35rem; }
+    details.live-view > summary {
+      cursor: pointer;
+      font-size: .85rem;
+      color: var(--l3);
+      user-select: none;
+    }
+    details.live-view > pre { transition: box-shadow .25s; }
+    details.live-view > pre.flash { box-shadow: inset 0 0 0 2px #f5a623; }
+    details.live-view .live-note { font-size: .75rem; color: var(--muted); margin: .35rem 0 0; }
     .spinner { color: var(--muted); font-style: italic; }
     footer { text-align: center; padding: 2rem; color: var(--muted); font-size: .85rem; }
     img.placeholder { background: #dde3ea; }
@@ -1124,28 +1135,70 @@
 </script>
 
 <script>
-  // ---- "View HTML source" blocks ----
-  // Must run before any dynamic content is injected, so each block shows the
-  // initial HTML exactly as a plain HTTP scraper would receive it (Level 5
-  // sandboxes therefore appear empty — that's the lesson).
-  document.querySelectorAll("section.scenario .sandbox").forEach(function (sandbox) {
-    const lines = sandbox.innerHTML.replace(/^\n+/, "").replace(/\s+$/, "").split("\n");
+  // ---- "View HTML source" + "View live DOM" blocks ----
+  // Source views must be captured before any dynamic content is injected, so
+  // each shows the initial HTML exactly as a plain HTTP scraper would receive
+  // it (Level 5 sandboxes therefore appear empty — that's the lesson).
+  // Live views re-render on every DOM mutation while open, so you can watch
+  // classes and attributes change as you interact (e.g. the tabs' "active"
+  // class) — the difference between the two views IS what JavaScript did.
+  function dedent(html) {
+    const lines = html.replace(/^\n+/, "").replace(/\s+$/, "").split("\n");
     const indents = lines.filter(function (l) { return l.trim(); })
                          .map(function (l) { return l.match(/^[ \t]*/)[0].length; });
     const minIndent = indents.length ? Math.min.apply(null, indents) : 0;
-    const code = lines.map(function (l) { return l.slice(minIndent); }).join("\n");
+    return lines.map(function (l) { return l.slice(minIndent); }).join("\n");
+  }
 
+  function makeViewer(className, summaryText) {
     const details = document.createElement("details");
-    details.className = "source-view";
+    details.className = className;
     const summary = document.createElement("summary");
-    summary.textContent = "</> View HTML source (as initially served, before JavaScript)";
+    summary.textContent = summaryText;
     const pre = document.createElement("pre");
     const codeEl = document.createElement("code");
-    codeEl.textContent = code;
     pre.appendChild(codeEl);
     details.appendChild(summary);
     details.appendChild(pre);
-    sandbox.insertAdjacentElement("afterend", details);
+    return { details: details, pre: pre, codeEl: codeEl };
+  }
+
+  document.querySelectorAll("section.scenario .sandbox").forEach(function (sandbox) {
+    // static snapshot, captured now (pre-JavaScript)
+    const source = makeViewer("source-view", "</> View HTML source (as initially served, before JavaScript)");
+    source.codeEl.textContent = dedent(sandbox.innerHTML);
+    sandbox.insertAdjacentElement("afterend", source.details);
+
+    // live view: renders lazily on open, tracks mutations while open
+    const live = makeViewer("live-view", "⚡ View live DOM (updates as you interact)");
+    const note = document.createElement("p");
+    note.className = "live-note";
+    note.textContent = "Interact with the example above — the markup below re-renders on every change and flashes when it does. Compare with the static view to see exactly what JavaScript altered.";
+    live.details.appendChild(note);
+    source.details.insertAdjacentElement("afterend", live.details);
+
+    let observer = null;
+    let pending = false;
+    function render() { live.codeEl.textContent = dedent(sandbox.innerHTML); }
+    live.details.addEventListener("toggle", function () {
+      if (live.details.open) {
+        render();
+        observer = new MutationObserver(function () {
+          if (pending) return;
+          pending = true;
+          requestAnimationFrame(function () {
+            pending = false;
+            render();
+            live.pre.classList.add("flash");
+            setTimeout(function () { live.pre.classList.remove("flash"); }, 350);
+          });
+        });
+        observer.observe(sandbox, { subtree: true, childList: true, attributes: true, characterData: true });
+      } else if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    });
   });
 
   // The JSON payload for 5.7 lives outside its sandbox — include it in that
